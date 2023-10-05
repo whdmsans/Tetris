@@ -7,10 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.Timer;
+import javax.swing.*;
 
 public class Board extends JPanel implements ActionListener {//인터페이스 = 액션리스너 //상속클래스 = Jpanel
 
@@ -288,7 +285,7 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 			if (isPaused)//멈춤상태시 키스위치 잠금
 				return;
 
-			switch (keycode) {//키입력
+			/*switch (keycode) {//키입력
 			case KeyEvent.VK_LEFT:
 				tryMove(curPiece, curX - 1, curY);
 				break;
@@ -310,7 +307,33 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 			case 'D':
 				oneLineDown();
 				break;
+			}*/
+			if (keycode == KeyEvent.VK_LEFT) {
+				tryMove(curPiece, curX - 1, curY);
 			}
+			if (keycode == KeyEvent.VK_RIGHT) {
+				tryMove(curPiece, curX + 1, curY);
+			}
+			if (keycode == KeyEvent.VK_UP) {
+				tryMove(curPiece.rotateRight(), curX, curY);
+			}
+			if (keycode == KeyEvent.VK_DOWN) {
+				tryMove(curPiece.rotateLeft(), curX, curY);
+			}
+			if (keycode == KeyEvent.VK_SPACE) {
+				dropDown();
+			}
+			if (keycode == KeyEvent.VK_D) {
+				oneLineDown();
+			}
+		}
+	}
+	class tThread implements Runnable{
+		public tThread(Board game){
+
+		}
+		@Override
+		public void run() {
 
 		}
 	}
