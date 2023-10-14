@@ -1,5 +1,7 @@
 package kr.ac.jbnu.se.tetris;
 
+import com.google.firebase.FirebaseApp;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -13,7 +15,10 @@ public class Tetris extends JFrame {//테트리스 클래스
 	final int windowHeight = 400;
 	protected Boundary boundary, boundary2;
 	protected KeyControl keyCtrl;
+	protected FirebaseTool firebaseTool;
 	public Tetris() {
+		firebaseTool=FirebaseTool.getInstance();
+		if(!firebaseTool.logIn("hiyd125@jbnu.ac.kr","rltn12"))firebaseTool.signUp("hiyd125@jbnu.ac.kr","rltn12");
 		//boundary와 control로 GUI, Logic을 구분짓고자 변수명 변경. 추후 수정할 시 요망.
 		boundary = new Boundary(this,false); // 실제 게임 화면
 		boundary2 = new Boundary(this,true);
@@ -26,6 +31,7 @@ public class Tetris extends JFrame {//테트리스 클래스
 		add(boundary2,BorderLayout.EAST);
 		add(display,BorderLayout.CENTER);
 		boundary.start();
+		boundary2.start();
 
 		setSize(windowWidth, windowHeight);
 		setTitle("Tetris");

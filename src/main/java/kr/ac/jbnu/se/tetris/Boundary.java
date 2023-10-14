@@ -19,11 +19,12 @@ public class Boundary extends JPanel implements ActionListener {//인터페이�
 	final int BoardWidth = 10;
 	/** 화면의 세로칸 수 */
 	final int BoardHeight = 22;
+	/** 기본 프레임 딜레이 400 */ //딜레이 구성 변경 로직 구현하여 난이도 조절 가능할 것이라고 추측됨.
 	Timer timer;//타이머 클래스는 존재. -> 타임레코딩 가능할것이라 예상됨. 필요 리소스 = DB
 	/** ture : 블록이 바닥에 닿은 상태 <br/>
 	 * false : 블록이 낙하중인 상태 */
 	boolean isFallingFinished = false;
-	/** 게임 시작 여부 */
+	/** 게임 시작 여부 */ //KeyControl 클래스가 static이어서, 한 보드가 false되버리면 키 감지 로직 멈추는 현상 있음, 확인 요망
 	boolean isStarted = false;
 	boolean isP2 = false;
 	/** 게임 일시정지 여부 */
@@ -36,8 +37,14 @@ public class Boundary extends JPanel implements ActionListener {//인터페이�
 	int curY = 0;
 	/** 현재 떨어지는 블록 */
 	Entity curPiece;
+	Tetris game;
+	GlobalStorage globalStorage;
+	FirebaseTool firebaseTool;
 	public Boundary(Tetris game, Boolean isP2) {
 		this.isP2=isP2;
+		this.game = game;
+		globalStorage = GlobalStorage.getInstance();
+		firebaseTool = FirebaseTool.getInstance();
 		setFocusable(true); // 키입력 강제로 받도록 설정.
 		curPiece = new Entity(Tetrominoes.NoShape); // 현재 블록
 		timer = new Timer(400, this); // 이벤트간 딜레이 400
@@ -158,6 +165,10 @@ public class Boundary extends JPanel implements ActionListener {//인터페이�
 			curPiece = new Entity(Tetrominoes.NoShape); // 떨어지는 블록 없앰
 			timer.stop();
 			isStarted = false;
+			if(!isP2()||Integer.parseInt(globalStorage.getUserBestScore())<numLinesRemoved) {
+				globalStorage.setUserBestScore(String.valueOf(numLinesRemoved));
+				firebaseTool.setUserBestScore(globalStorage.getUserID(), String.valueOf(numLinesRemoved));// 베스트 스코어 업데이트
+			}
 			TestMonitor.setScore(-1,isP2);
 		}
 	}
