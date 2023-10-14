@@ -53,7 +53,7 @@ public class Entity {
             result.updateX(i, -y(i));
             result.updateY(i, x(i));
         }
-        return this;
+        return result;
     }
     public void setRandomShape() { // 난수 x를 만들어 7개의 블록들 중에 랜덤으로 설정
         Random r = new Random();

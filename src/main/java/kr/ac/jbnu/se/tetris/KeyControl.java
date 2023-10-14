@@ -38,8 +38,8 @@ public class KeyControl extends KeyAdapter{
             if(key == KeyEvent.VK_L&&!isLeftP2){isRightP2 = false; TestMonitor.setRightKey(isRightP2);}
             if(key == KeyEvent.VK_I&&!isDownP2){isUpP2 = false; TestMonitor.setUpKey(isUpP2);}
             if(key == KeyEvent.VK_K&&!isUpP2){isDownP2 = false; TestMonitor.setDownKey(isDownP2);}
-            if(key == KeyEvent.VK_BRACELEFT&&!isOneP2){isDropP2 = false; TestMonitor.setSpaceKey(isDropP2);}
-            if(key == KeyEvent.VK_BRACERIGHT&&!isDropP2){isOneP2 = false; TestMonitor.setDKey(isOneP2);}
+            if(key == ']'&&!isOneP2){isDropP2 = false; TestMonitor.setSpaceKey(isDropP2);}
+            if(key == '['&&!isDropP2){isOneP2 = false; TestMonitor.setDKey(isOneP2);}
         }
         if(key == KeyEvent.VK_LEFT&&!isRight){isLeft = false; TestMonitor.setLeftKey(isLeft);}
         if(key == KeyEvent.VK_RIGHT&&!isLeft){isRight = false; TestMonitor.setRightKey(isRight);}
@@ -51,7 +51,8 @@ public class KeyControl extends KeyAdapter{
     }
     @Override
     public void keyPressed(KeyEvent e) {
-        if (!player1.isStarted || player1.getCurPiece().getShape() == Tetrominoes.NoShape) {
+        if ((!player1.isStarted || player1.getCurPiece().getShape() == Tetrominoes.NoShape)&&
+                (!player2.isStarted || player2.getCurPiece().getShape() == Tetrominoes.NoShape)) {
             return;
         }
         int key = e.getKeyCode();
@@ -62,8 +63,8 @@ public class KeyControl extends KeyAdapter{
                 if(key == KeyEvent.VK_L&&!isLeftP2){isRightP2 = true; TestMonitor.setRightKey(isRightP2);}
                 if(key == KeyEvent.VK_I&&!isDownP2){isUpP2 = true; TestMonitor.setUpKey(isUpP2);}
                 if(key == KeyEvent.VK_K&&!isUpP2){isDownP2 = true; TestMonitor.setDownKey(isDownP2);}
-                if(key == KeyEvent.VK_BRACELEFT&&!isOneP2){isDropP2 = true; TestMonitor.setSpaceKey(isDropP2);}
-                if(key == KeyEvent.VK_BRACERIGHT&&!isDropP2){isOneP2 = true; TestMonitor.setDKey(isOneP2);}
+                if(key == ']'&&!isOneP2){isDropP2 = true; TestMonitor.setSpaceKey(isDropP2);}
+                if(key == '['&&!isDropP2){isOneP2 = true; TestMonitor.setDKey(isOneP2);}
             }
         }
         if (player1.isStarted || player1.getCurPiece().getShape() != Tetrominoes.NoShape || !player1.isPaused()) {
@@ -77,7 +78,6 @@ public class KeyControl extends KeyAdapter{
         doKeyLogic();
     }
     public void doKeyLogic(){
-        /*if ( isP2 ) { player = P2; } else { player = P1; }*/
         /**
          * 일시정지, 드롭다운은 즉각 처리. switch문 이전에 KeyPressed에서 처리함
          * 아래는 키값의 상수처리, 이를 합연산으로 처리 구분*/
