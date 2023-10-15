@@ -1,5 +1,7 @@
 package kr.ac.jbnu.se.tetris;
 
+import kr.ac.jbnu.se.tetris.TetrisBot.TetrisBotMode;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
@@ -18,9 +20,12 @@ public class Tetris extends JFrame {//테트리스 클래스
 
 		statusbar = new JLabel(" 0");
 		add(statusbar, BorderLayout.SOUTH); // 상태바 위치 설정
-		Board board = new Board(this); // 실제 게임 화면
-		add(board);
-		board.start();
+//		Board board = new Board(this); // 실제 게임 화면
+//		add(board);
+//		board.start();
+
+		TetrisBotMode TBM = new TetrisBotMode(this);
+		TBM.start(10);
 
 		setSize(200, 400);
 		setTitle("Tetris");

@@ -4,8 +4,9 @@ import java.util.Random;
 
 public class Shape { // Shape클래스의 인스턴스가 하나의 블록
 
+	public int[] position = new int[2];
 	private Tetrominoes pieceShape; // 블록의 종류를 저장하는 변수
-	private int coords[][];
+	public int[][] coords;
 	/*
 	현재 블록 모양을 저장하는 2차원 배열
 	coords의 행은 칸을 나타내는 인덱스 (0 ~ 3) 4개
@@ -86,6 +87,14 @@ public class Shape { // Shape클래스의 인스턴스가 하나의 블록
 		return m;
 	}
 
+	public int maxY() {
+		int m = coords[0][1];
+		for (int i = 0; i < 4; i++) {
+			m = Math.max(m, coords[i][1]);
+		}
+		return m;
+	}
+
 	public int minY() { // 블록의 가장 아래쪽 칸의 y좌표를 반환
 		int m = coords[0][1];
 		for (int i = 0; i < 4; i++) {
@@ -113,12 +122,52 @@ public class Shape { // Shape클래스의 인스턴스가 하나의 블록
 			return this;
 
 		Shape result = new Shape();
+		result.setPosition(position[0], position[1]);
 		result.pieceShape = pieceShape;
 
 		for (int i = 0; i < 4; ++i) {
 			result.setX(i, -y(i));
 			result.setY(i, x(i));
 		}
+
 		return result;
+	}
+
+	public void copyShape(Shape shape) {
+		pieceShape = shape.getShape();
+		for (int i = 0; i < position.length; i++) {
+			position[i] = shape.position[i];
+		}
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 2; j++) {
+				coords[i][j] = shape.coords[i][j];
+			}
+		}
+	}
+
+	public int getNumOfRotate() {
+		switch (pieceShape) {
+			case TShape:
+			case LShape:
+			case MirroredLShape:
+				return 4;
+			case ZShape:
+			case SShape:
+			case LineShape:
+				return 2;
+			case SquareShape:
+				return 1;
+			case NoShape:
+			default:
+				return 0;
+		}
+    }
+	public void setPosition(int x, int y) {
+        position[0] = x;
+		position[1] = y;
+	}
+
+	public int getBlockNum() {
+		return pieceShape.ordinal();
 	}
 }
