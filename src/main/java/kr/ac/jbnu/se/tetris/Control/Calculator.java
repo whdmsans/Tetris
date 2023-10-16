@@ -1,19 +1,21 @@
 package kr.ac.jbnu.se.tetris.Control;
 
+import kr.ac.jbnu.se.tetris.Boundary.TetrisCanvas;
 import kr.ac.jbnu.se.tetris.Entity.Point;
+import kr.ac.jbnu.se.tetris.Entity.Tetrominoes;
 
 import java.util.*;
 
+import static kr.ac.jbnu.se.tetris.Boundary.TetrisCanvas.BoardHeight;
+import static kr.ac.jbnu.se.tetris.Boundary.TetrisCanvas.BoardWidth;
+
 public class Calculator {
-    private int[] board;
+    private Tetrominoes[] board;
+    private TetrisCanvas canvas;
 
-    private final int boardWidth;
-    private final int boardHeight;
-
-    public Calculator (int[] board, int boardWidth, int boardHeight) {
+    public Calculator (TetrisCanvas canvas, Tetrominoes[] board) {
+        this.canvas = canvas;
         this.board = board;
-        this.boardWidth = boardWidth;
-        this.boardHeight = boardHeight;
     }
 
     public Double blockFitness(double[] weight) {
@@ -22,7 +24,7 @@ public class Calculator {
         int hc = hole_count();
         int cl = complete_line();
 
-        int[] height = new int[boardHeight];
+        int[] height = new int[BoardHeight];
         int ah = aggregate_height(height);
         int b = bumpiness(height);
 
@@ -38,14 +40,14 @@ public class Calculator {
     // 완성된 줄을 찾는 메소드
     private int complete_line() {
         int ret = 0;
-        for (int i = 0; i < boardHeight; i++) {
+        for (int i = 0; i < BoardHeight; i++) {
             int j;
-            for (j = 0; j < boardWidth; j++) {
-                if (board[j * boardWidth + i] == 0)
+            for (j = 0; j < BoardWidth; j++) {
+                if (canvas.board[j * BoardWidth + i] == Tetrominoes.NoShape)
                     break;
             }
 
-            if (j == boardWidth)
+            if (j == BoardWidth)
                 ret++;
         }
 
@@ -54,17 +56,17 @@ public class Calculator {
 
     private int bumpiness(int height[]) {
         int ret = 0;
-        for (int i = 1; i < boardWidth; i++) {
+        for (int i = 1; i < BoardWidth; i++) {
             ret += Math.abs(height[i - 1] - height[i]);
         }
         return ret;
     }
 
     private int aggregate_height(int height[]) {
-        for (int i = 0; i < boardWidth; i++) {
-            int high = boardHeight - 1;
+        for (int i = 0; i < BoardWidth; i++) {
+            int high = BoardHeight - 1;
             while (high >= 0) {
-                if (board[high * boardWidth + i] != 0) {
+                if (canvas.board[high * BoardWidth + i] != Tetrominoes.NoShape) {
                     break;
                 }
                 high--;
@@ -73,7 +75,7 @@ public class Calculator {
         }
 
         int ret = 0;
-        for (int i = 0; i < boardHeight; i++) {
+        for (int i = 0; i < BoardHeight; i++) {
             ret += height[i];
         }
         return ret;
@@ -81,12 +83,12 @@ public class Calculator {
 
     // 테트리스 블럭들 사이에 존재하는 구멍을 구하는 메소드
     private int hole_count() {
-        boolean[][] visited = new boolean[boardHeight][boardWidth];
+        boolean[][] visited = new boolean[BoardHeight][BoardWidth];
 
         // 테트리스 보드판에 0이 아닌 지점을 찾는다.
-        for (int i = 0; i < boardHeight; i++) {
-            for (int j = 0; j < boardWidth; j++) {
-                if (board[i * boardWidth + j] != 0)
+        for (int i = 0; i < BoardHeight; i++) {
+            for (int j = 0; j < BoardWidth; j++) {
+                if (canvas.board[i * BoardWidth + j] != Tetrominoes.NoShape)
                     visited[i][j] = true;
             }
         }
@@ -97,8 +99,8 @@ public class Calculator {
         int ret = 0;
 
         // bfs를 진행하고 boolean 값이 false인 값은 구멍이다.
-        for (int i = 0; i < boardHeight; i++) {
-            for (int j = 0; j < boardWidth; j++) {
+        for (int i = 0; i < BoardHeight; i++) {
+            for (int j = 0; j < BoardWidth; j++) {
                 if (!visited[i][j])
                     ret++;
             }
@@ -122,7 +124,7 @@ public class Calculator {
                 int nx = cur.x + ud[i];
                 int ny = cur.y + rl[i];
 
-                if (nx < 0 || nx >= boardHeight || ny < 0 || ny >= boardWidth || visited[nx][ny])
+                if (nx < 0 || nx >= BoardHeight || ny < 0 || ny >= BoardWidth || visited[nx][ny])
                     continue;
 
                 visited[nx][ny] = true;

@@ -5,8 +5,6 @@ public class GlobalStorage {
     private static GlobalStorage globalStorage = null;
     private String userID = "";
     private String userBestScore = "";
-    private String userProfileImage = "";
-    private String userTheme = "";
     private GlobalStorage() {
     }
     public static GlobalStorage getInstance() {

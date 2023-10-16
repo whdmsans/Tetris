@@ -16,31 +16,38 @@ import javax.swing.*;
 public class Tetris extends JFrame {//테트리스 클래스
 	final int windowWidth = 600;
 	final int windowHeight = 400;
-	public TetrisCanvas boundary;
-	public TetrisCanvas boundary2;
+	protected TetrisCanvas boundary, boundary2, boundaryAI;
 	protected KeyControl keyCtrl;
 	protected FirebaseTool firebaseTool;
 	public Tetris() {
 		firebaseTool=FirebaseTool.getInstance();
 		if(!firebaseTool.logIn("hiyd125@jbnu.ac.kr","rltn12"))firebaseTool.signUp("hiyd125@jbnu.ac.kr","rltn12");
 		//boundary와 control로 GUI, Logic을 구분짓고자 변수명 변경. 추후 수정할 시 요망.
-		boundary = new TetrisCanvas(this,false); // 실제 게임 화면
-		boundary2 = new TetrisCanvas(this,true);
+		boundary = new TetrisCanvas(this,0); // 실제 게임 화면
+		//boundary2 = new TetrisCanvas(this,true);
 		keyCtrl = new KeyControl(this);
 		TestMonitor display = new TestMonitor();
+
 		boundary.setPreferredSize(new Dimension(windowWidth/3,windowHeight));
-		boundary2.setPreferredSize(new Dimension(windowWidth/3,windowHeight));
+		//boundary2.setPreferredSize(new Dimension(windowWidth/3,windowHeight));
+		//boundaryAI.setPreferredSize(new Dimension(windowWidth/3,windowHeight));
 		display.setPreferredSize(new Dimension(windowWidth/3,windowHeight));
+
 		add(boundary,BorderLayout.WEST);
-		add(boundary2,BorderLayout.EAST);
 		add(display,BorderLayout.CENTER);
-		boundary.start();
-		boundary2.start();
+		//add(boundary2,BorderLayout.EAST);
+		//add(boundaryAI,BorderLayout.EAST);
+
+		boundary.start(-1);
+		//boundary2.start(-1);
+		//boundaryAI.start(10);
 
 		setSize(windowWidth, windowHeight);
 		setTitle("Tetris");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
+	public TetrisCanvas getP1(){ return boundary; }
+	public TetrisCanvas getP2(){ return boundary2 != null ? boundary2 : null; }
 	public static void main(String[] args) {//메인실행코드
 		Tetris game = new Tetris();
 		game.setFocusable(true);

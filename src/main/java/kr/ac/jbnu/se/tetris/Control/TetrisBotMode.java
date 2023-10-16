@@ -1,3 +1,4 @@
+/*
 package kr.ac.jbnu.se.tetris.Control;
 
 import kr.ac.jbnu.se.tetris.Boundary.TestMonitor;
@@ -461,4 +462,4 @@ public class TetrisBotMode extends JPanel {
         newPiece.setPosition(newX, newY);
         return true;
     }
-}
+}*/

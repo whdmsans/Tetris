@@ -1,6 +1,8 @@
 package kr.ac.jbnu.se.tetris.Boundary;
 
 import kr.ac.jbnu.se.tetris.Control.FirebaseTool;
+import kr.ac.jbnu.se.tetris.Control.ModePack;
+import kr.ac.jbnu.se.tetris.Entity.Chromosome;
 import kr.ac.jbnu.se.tetris.Entity.Entity;
 import kr.ac.jbnu.se.tetris.Entity.GlobalStorage;
 import kr.ac.jbnu.se.tetris.Tetris;
@@ -9,6 +11,9 @@ import kr.ac.jbnu.se.tetris.Entity.Tetrominoes;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -20,11 +25,13 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 	 *    board의 인덱스값은 십의 자릿수가 y, 일의 자릿수가 x를 나타냄 <br/>
 	 *    ex) (3,1)의 위치를 인덱싱하려면 -> board[13]
 	 */
-	Tetrominoes[] board;
+	public Tetrominoes[] board;
+	/** 모드 클래스 */
+	private ModePack aiMode;
 	/** 화면의 가로칸 수 */
-	final int BoardWidth = 10;
+	public static final int BoardWidth = 10;
 	/** 화면의 세로칸 수 */
-	final int BoardHeight = 22;
+	public static final int BoardHeight = 22;
 	/** 기본 프레임 딜레이 400 */ //딜레이 구성 변경 로직 구현하여 난이도 조절 가능할 것이라고 추측됨.
 	Timer timer;//타이머 클래스는 존재. -> 타임레코딩 가능할것이라 예상됨. 필요 리소스 = DB
 	/** ture : 블록이 바닥에 닿은 상태 <br/>
@@ -32,26 +39,25 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 	boolean isFallingFinished = false;
 	/** 게임 시작 여부 */ //KeyControl 클래스가 static이어서, 한 보드가 false되버리면 키 감지 로직 멈추는 현상 있음, 확인 요망
 	boolean isStarted = false;
+	/** 2P 모드 */
 	boolean isP2 = false;
+	/** AI 모드 */
+	boolean isAI = false;
 	/** 게임 일시정지 여부 */
 	boolean isPaused = false;
 	/** 지워진 라인 갯수 */
 	int numLinesRemoved = 0;
-	/** 떨어지는 블록의 x좌표 */
-	int curX = 0;
-	/** 떨어지는 블록의 y좌표 */
-	int curY = 0;
 	/** 현재 떨어지는 블록 */
 	Entity curPiece;
 	Tetris game;
 	GlobalStorage globalStorage;
 	FirebaseTool firebaseTool;
-	public TetrisCanvas(Tetris game, Boolean isP2) {
-		this.isP2=isP2;
+	public TetrisCanvas(Tetris game, int modeNumber) {
+		selectMode(modeNumber);
 		this.game = game;
 		globalStorage = GlobalStorage.getInstance();
 		firebaseTool = FirebaseTool.getInstance();
-		setFocusable(true); // 키입력 강제로 받도록 설정.
+		//setFocusable(true); // 키입력 강제로 받도록 설정.
 		curPiece = new Entity(Tetrominoes.NoShape); // 현재 블록
 		timer = new Timer(400, this); // 이벤트간 딜레이 400
 		timer.start(); // start 메서드 첫번째 실행(Board 클래스의 start()에서 중복 실행됨)
@@ -72,8 +78,12 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 	/** 칸의 세로 길이 */
 	int squareHeight() { return (int) getSize().getHeight() / BoardHeight; }
 	/** (x,y)에 블록 종류 */
-	Tetrominoes shapeAt(int x, int y) { return board[(y * BoardWidth) + x]; }
-	public void start() {
+	public Tetrominoes shapeAt(int x, int y) { return board[(y * BoardWidth) + x]; }
+	public void start(int aiSeed) {
+		if(aiSeed > -1){
+			aiMode = new ModePack(this);
+			aiMode.initWeight(aiSeed);
+		}
 		if (isPaused)
 			return;
 
@@ -120,29 +130,30 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 		// 떨어지는 블록 색칠
 		if (curPiece.getShape() != Tetrominoes.NoShape) {
 			for (int i = 0; i < 4; ++i) {
-				int x = curX + curPiece.x(i);
-				int y = curY - curPiece.y(i);
+				int x = curPiece.getCurX() + curPiece.x(i);
+				int y = curPiece.getCurY() - curPiece.y(i);
 				drawSquare(g, 0 + x * squareWidth(), boardTop + (BoardHeight - y - 1) * squareHeight(),
 						curPiece.getShape());
 			}
 		}
 	}
-	public void dropDown() {
-		int newY = curY;
+	public boolean dropDown() {
+		int newY = curPiece.getCurY();
 		while (newY > 0) {
-			if (!tryMove(curPiece, curX, newY - 1))
+			if (!tryMove(curPiece, curPiece.getCurX(), newY - 1))
 				break;
 			--newY;
 		}
 		pieceDropped();
+		return true;
 	}
 	/** 블록이 한줄 아래로 내려가는 메소드*/
 	private void oneLineDown() {
-		if (!tryMove(curPiece, curX, curY - 1))
+		if (!tryMove(curPiece, curPiece.getCurX(), curPiece.getCurY() - 1))
 			pieceDropped(); //떨어지면 수행되는 메소드, 드롭다운과 동일
 	}
 	/** 모든 칸을 빈 공간(NoShape블록)으로 초기화 */
-	private void clearBoard() {
+	public void clearBoard() {
 		for (int i = 0; i < BoardHeight * BoardWidth; ++i)
 			board[i] = Tetrominoes.NoShape;
 	}
@@ -150,8 +161,8 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 	private void pieceDropped() {
 		// 현재 위치에 블록 배치
 		for (int i = 0; i < 4; ++i) {
-			int x = curX + curPiece.x(i);
-			int y = curY - curPiece.y(i);
+			int x = curPiece.getCurX() + curPiece.x(i);
+			int y = curPiece.getCurY() - curPiece.y(i);
 			board[(y * BoardWidth) + x] = curPiece.getShape();
 		}
 		// 완성된 라인 확인
@@ -164,10 +175,8 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 	private void newPiece() {
 		// 블록 종류 및 위치 수정
 		curPiece.setRandomShape();
-		curX = BoardWidth / 2 + 1;
-		curY = BoardHeight - 1 + curPiece.minY();
 		// 블록이 움직이지 못할 때(게임 종료)
-		if (!tryMove(curPiece, curX, curY)) {//블록 과다로 게임오버시.
+		if (!tryMove(curPiece, curPiece.getCurX(), curPiece.getCurY())) {//블록 과다로 게임오버시.
 			curPiece = new Entity(Tetrominoes.NoShape); // 떨어지는 블록 없앰
 			timer.stop();
 			isStarted = false;
@@ -190,10 +199,9 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 				return false;
 		}
 		curPiece = newPiece;
-		curX = newX;
-		curY = newY;
-		TestMonitor.setCurDxP1(this.getCurX());
-		TestMonitor.setCurDyP1(this.getCurY());
+		curPiece.setPosition(newX,newY);
+		TestMonitor.setCurDxP1(curPiece.getCurX());
+		TestMonitor.setCurDyP1(curPiece.getCurY());
 		repaint();
 		return true;
 	}
@@ -241,11 +249,27 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 		g.drawLine(x + 1, y + squareHeight() - 1, x + squareWidth() - 1, y + squareHeight() - 1);
 		g.drawLine(x + squareWidth() - 1, y + squareHeight() - 1, x + squareWidth() - 1, y + 1);
 	}
+	public void setCurPiece(Entity curPiece) {
+		this.curPiece = curPiece;
+	}
 	public Entity getCurPiece(){ return curPiece; }
 	public boolean isFallingFinished() { return isFallingFinished; }
-	public int getCurX(){ return curX; }
-	public int getCurY(){ return curY; }
 	public boolean isPaused(){ return isPaused; }
 	protected boolean isP2(){ return isP2; }
 	public boolean isStarted(){ return isStarted; }
+	private void selectMode(int i){
+		switch (i){
+			case 1:
+				isP2 = true;
+				isAI = false;
+				break;
+			case 2:
+				isP2 = false;
+				isAI = true;
+				break;
+			default:
+				isP2 = false;
+				isAI = false;
+		}
+	}
 }
