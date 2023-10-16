@@ -1,6 +1,9 @@
 package kr.ac.jbnu.se.tetris;
 
-import com.google.firebase.FirebaseApp;
+import kr.ac.jbnu.se.tetris.Boundary.TestMonitor;
+import kr.ac.jbnu.se.tetris.Boundary.TetrisCanvas;
+import kr.ac.jbnu.se.tetris.Control.FirebaseTool;
+import kr.ac.jbnu.se.tetris.Control.KeyControl;
 
 import java.awt.*;
 import javax.swing.*;
@@ -13,15 +16,16 @@ import javax.swing.*;
 public class Tetris extends JFrame {//테트리스 클래스
 	final int windowWidth = 600;
 	final int windowHeight = 400;
-	protected Boundary boundary, boundary2;
+	public TetrisCanvas boundary;
+	public TetrisCanvas boundary2;
 	protected KeyControl keyCtrl;
 	protected FirebaseTool firebaseTool;
 	public Tetris() {
 		firebaseTool=FirebaseTool.getInstance();
 		if(!firebaseTool.logIn("hiyd125@jbnu.ac.kr","rltn12"))firebaseTool.signUp("hiyd125@jbnu.ac.kr","rltn12");
 		//boundary와 control로 GUI, Logic을 구분짓고자 변수명 변경. 추후 수정할 시 요망.
-		boundary = new Boundary(this,false); // 실제 게임 화면
-		boundary2 = new Boundary(this,true);
+		boundary = new TetrisCanvas(this,false); // 실제 게임 화면
+		boundary2 = new TetrisCanvas(this,true);
 		keyCtrl = new KeyControl(this);
 		TestMonitor display = new TestMonitor();
 		boundary.setPreferredSize(new Dimension(windowWidth/3,windowHeight));
