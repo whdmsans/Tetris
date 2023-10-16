@@ -5,6 +5,7 @@ import kr.ac.jbnu.se.tetris.Boundary.TetrisCanvas;
 import java.util.Random;
 
 public class Entity {
+
     /**
      * Boundary클래스의 curX=0, curY=1가 Entity에게 승계
      */

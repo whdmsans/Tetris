@@ -8,9 +8,10 @@ import kr.ac.jbnu.se.tetris.Control.KeyControl;
 import java.awt.*;
 import javax.swing.*;
 
-/*
-블록은 7개의 모양을 가진 블록과 구현을 위해 만들어진 빈 공간(NoShape)이 있음 (Tetrominoes 클래스에 종류의 이름이 있음)
-블록은 4개의 칸으로 구성
+/**
+ * 블록은 7개의 모양을 가진 블록과 구현을 위해 만들어진 빈 공간(NoShape)이 있음
+ * (Tetrominoes 클래스에 종류의 이름이 있음)
+ * 블록은 4개의 칸으로 구성
  */
 
 public class Tetris extends JFrame {//테트리스 클래스

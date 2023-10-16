@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 public class TestMonitor extends JPanel {
     /** Brace Left is P2 OneLineDrop, and Right is P2 DropDown key */
+
     static JLabel
             keyLeft, keyRight, keyUp, keyDown, keyD, keySpace, curDxP1, curDyP1, scoreBarP1,
             keyJ, keyL, keyI, keyK, keyBraceL,keyBraceR, curDxP2, curDyP2, scoreBarP2,

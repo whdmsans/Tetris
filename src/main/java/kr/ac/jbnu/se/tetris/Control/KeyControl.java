@@ -10,6 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class KeyControl extends KeyAdapter{
+
     boolean isLeft,isRight,isUp,isDown,isOne,isDrop;
     boolean isLeftP2,isRightP2,isUpP2,isDownP2,isOneP2,isDropP2;
     TetrisCanvas player1, player2;

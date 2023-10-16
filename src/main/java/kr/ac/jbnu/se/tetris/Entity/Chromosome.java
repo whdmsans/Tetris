@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class Chromosome {
 
+
     public static final int SIZE_GENE = 4;
     int fitness = 0;
     int number = 0;

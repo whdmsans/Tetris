@@ -2,6 +2,7 @@ package kr.ac.jbnu.se.tetris.Entity;
 
 
 public class GlobalStorage {
+
     private static GlobalStorage globalStorage = null;
     private String userID = "";
     private String userBestScore = "";

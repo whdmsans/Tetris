@@ -3,6 +3,7 @@ package kr.ac.jbnu.se.tetris.Entity;
 import java.awt.*;
 
 public enum Tetrominoes {
+
 	/** 블럭 형상 정보 인스턴스. 인덱싱 변수 idx를 포함하고 있음 */
 	NoShape, ZShape, SShape, LineShape, TShape, SquareShape, LShape, MirroredLShape;
 	/** 인스턴스 컴파일시 자동으로 enum들에게 배정됨 */

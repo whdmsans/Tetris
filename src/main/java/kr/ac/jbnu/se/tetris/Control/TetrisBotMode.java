@@ -17,6 +17,7 @@ import static kr.ac.jbnu.se.tetris.Entity.Chromosome.SIZE_GENE;
 
 public class TetrisBotMode extends JPanel {
 
+
     int[] board;
 
     final int BoardWidth = 10;

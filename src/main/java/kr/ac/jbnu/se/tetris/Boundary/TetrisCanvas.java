@@ -25,6 +25,7 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 	 *    board의 인덱스값은 십의 자릿수가 y, 일의 자릿수가 x를 나타냄 <br/>
 	 *    ex) (3,1)의 위치를 인덱싱하려면 -> board[13]
 	 */
+
 	public Tetrominoes[] board;
 	/** 모드 클래스 */
 	private ModePack aiMode;

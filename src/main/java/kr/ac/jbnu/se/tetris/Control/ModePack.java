@@ -15,6 +15,7 @@ import static kr.ac.jbnu.se.tetris.Boundary.TetrisCanvas.BoardWidth;
 import static kr.ac.jbnu.se.tetris.Entity.Chromosome.SIZE_GENE;
 
 public class ModePack {
+
     Random random;
     Calculator calculator;
     TetrisCanvas canvas;

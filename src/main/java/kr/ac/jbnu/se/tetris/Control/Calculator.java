@@ -10,6 +10,7 @@ import static kr.ac.jbnu.se.tetris.Boundary.TetrisCanvas.BoardHeight;
 import static kr.ac.jbnu.se.tetris.Boundary.TetrisCanvas.BoardWidth;
 
 public class Calculator {
+
     private Tetrominoes[] board;
     private TetrisCanvas canvas;
 

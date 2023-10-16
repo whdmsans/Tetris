@@ -1,6 +1,7 @@
 package kr.ac.jbnu.se.tetris.Entity;
 
 public class Account {
+
     private String id, pw;
     private int score;
     public Account(String id, String pw){
