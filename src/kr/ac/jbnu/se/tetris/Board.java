@@ -15,11 +15,11 @@ import javax.swing.Timer;
 public class Board extends JPanel implements ActionListener {//인터페이스 = 액션리스너 //상속클래스 = Jpanel
 
 	/**
-	 *  게임 화면을 구성하는 칸 <br/>
-	 * 	해당 칸에 어떤 블록이 들어있는지 저장하는 변수 <br/>
-	 * 	세로축을 y, 가로축을 x로 생각했을 때, <br/>
-	 * 	board의 인덱스값은 십의 자릿수가 y, 일의 자릿수가 x를 나타냄 <br/>
-	 * 	ex) (3,1)의 위치를 인덱싱하려면 -> board[13]
+	 * 게임 화면을 구성하는 칸 <br/>
+	 * 해당 칸에 어떤 블록이 들어있는지 저장하는 변수 <br/>
+	 * 세로축을 y, 가로축을 x로 생각했을 때, <br/>
+	 * board의 인덱스값은 십의 자릿수가 y, 일의 자릿수가 x를 나타냄 <br/>
+	 * ex) (3,1)의 위치를 인덱싱하려면 -> board[13]
 	 */
 	Tetrominoes[] board;
 
@@ -34,7 +34,7 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 
 
 	Timer timer;//타이머 클래스는 존재. -> 타임레코딩 가능할것이라 예상됨. 필요 리소스 = DB
-	/** ture : 블록이 바닥에 닿은 상태 <br/>
+	/** true : 블록이 바닥에 닿은 상태 <br/>
 	 * false : 블록이 낙하중인 상태 */
 	boolean isFallingFinished = false;
 
@@ -42,15 +42,17 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 	boolean isStarted = false;
 	/** 게임 일시정지 여부 */
 	boolean isPaused = false;
-	/** 지워진 라인 갯수 */
+	/** 지워진 라인 개수 */
 	int numLinesRemoved = 0;
 	int curX = 0;//떨어지는 블록의 x좌표
 	int curY = 0;//떨어지는 블록의 y좌표
 	JLabel statusbar;// Tetris 클래스의 'statusbar'변수 저장
 	Shape curPiece; // 현재 떨어지는 블록
 
-	public Board(Tetris parent) {
+	private final Tetris tetris;
 
+	public Board(Tetris parent) {
+		this.tetris = parent;
 		setFocusable(true);
 		curPiece = new Shape();//현재 블록
 		timer = new Timer(400, this);// 이벤트간 딜레이 400
@@ -58,7 +60,7 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 
 		statusbar = parent.getStatusBar();
 		board = new Tetrominoes[BoardWidth * BoardHeight]; // 1차원 배열의 칸 생성
-		addKeyListener(new TAdapter());
+		addKeyListener(new TAdapter(this));
 		clearBoard();
 	}
 
@@ -76,18 +78,21 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 	int squareWidth() {
 		return (int) getSize().getWidth() / BoardWidth;
 	}
+
 	/** 칸의 세로 길이 */
 	int squareHeight() {
 		return (int) getSize().getHeight() / BoardHeight;
 	}
+
 	/** (x,y)에 블록 종류 */
 	Tetrominoes shapeAt(int x, int y) {
 		return board[(y * BoardWidth) + x];
 	}
 
 	public void start() {
-		if (isPaused)
+		if (isPaused || isStarted) {
 			return;
+		}
 
 		isStarted = true;
 		isFallingFinished = false;
@@ -96,6 +101,10 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 
 		newPiece();
 		timer.start(); // start 메서드 두번째 실행(클래스의 생성자에서 중복 실행됨)
+	}
+
+	public int getNumLinesRemoved() {
+		return numLinesRemoved;
 	}
 
 	/** 일시정지 메소드 */
@@ -113,7 +122,7 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 		}
 		repaint();
 	}
-	
+
 	public void paint(Graphics g) {
 		super.paint(g);
 
@@ -134,8 +143,7 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 			for (int i = 0; i < 4; ++i) {
 				int x = curX + curPiece.x(i);
 				int y = curY - curPiece.y(i);
-				drawSquare(g, 0 + x * squareWidth(), boardTop + (BoardHeight - y - 1) * squareHeight(),
-						curPiece.getShape());
+				drawSquare(g, 0 + x * squareWidth(), boardTop + (BoardHeight - y - 1) * squareHeight(), curPiece.getShape());
 			}
 		}
 	}
@@ -182,6 +190,10 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 
 	/** 새 블록 생성 */
 	private void newPiece() {
+		if (tetris.getCurrentMode() == Tetris.GameMode.SURVIVAL_MODE) {
+			curPiece.setShape(Tetrominoes.GrayLineShape);
+		}
+
 		// 블록 종류 및 위치 수정
 		curPiece.setRandomShape();
 		curX = BoardWidth / 2 + 1;
@@ -197,7 +209,7 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 	}
 
 	/** 블록 움직일 수 있는지 여부 반환<br/>
-	 *  만약 움직일 수 있다면 움직이는 메서드 */
+	 * 만약 움직일 수 있다면 움직이는 메서드 */
 	private boolean tryMove(Shape newPiece, int newX, int newY) {
 		for (int i = 0; i < 4; ++i) {
 			int x = newX + newPiece.x(i);
@@ -251,11 +263,11 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 		}
 	}
 
-	/** 칸을 블록의 종류에 맞게 색칠하는 메소드 */
+	/** 칸을 블록의 종류에 맞게 색칠하는 메소드*/
 	private void drawSquare(Graphics g, int x, int y, Tetrominoes shape) {
-		Color colors[] = { new Color(0, 0, 0), new Color(204, 102, 102), new Color(102, 204, 102),
+		Color colors[] = {new Color(0, 0, 0), new Color(204, 102, 102), new Color(102, 204, 102),
 				new Color(102, 102, 204), new Color(204, 204, 102), new Color(204, 102, 204), new Color(102, 204, 204),
-				new Color(218, 170, 0) };
+				new Color(218, 170, 0), new Color(90, 90, 90)};
 
 		Color color = colors[shape.ordinal()];
 
@@ -270,8 +282,13 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 		g.drawLine(x + 1, y + squareHeight() - 1, x + squareWidth() - 1, y + squareHeight() - 1);
 		g.drawLine(x + squareWidth() - 1, y + squareHeight() - 1, x + squareWidth() - 1, y + 1);
 	}
-	
+
 	class TAdapter extends KeyAdapter {//키어뎁터는 키이벤트 핸들러로 처리
+		private final Board board;
+
+		public TAdapter(Board board) {
+			this.board = board;
+		}
 		public void keyPressed(KeyEvent e) {
 
 			if (!isStarted || curPiece.getShape() == Tetrominoes.NoShape) {
@@ -289,29 +306,29 @@ public class Board extends JPanel implements ActionListener {//인터페이스 = 액션
 				return;
 
 			switch (keycode) {//키입력
-			case KeyEvent.VK_LEFT:
-				tryMove(curPiece, curX - 1, curY);
-				break;
-			case KeyEvent.VK_RIGHT:
-				tryMove(curPiece, curX + 1, curY);
-				break;
-			case KeyEvent.VK_DOWN://우회전
-				tryMove(curPiece.rotateRight(), curX, curY);
-				break;
-			case KeyEvent.VK_UP://좌회전
-				tryMove(curPiece.rotateLeft(), curX, curY);
-				break;
-			case KeyEvent.VK_SPACE:
-				dropDown();//드롭다운형식은 즉시 드랍
-				break;
-			case 'd':
-				oneLineDown();//드롭 프레임의 가속화
-				break;
-			case 'D':
-				oneLineDown();
-				break;
+				case KeyEvent.VK_LEFT:
+					tryMove(curPiece, curX - 1, curY);
+					break;
+				case KeyEvent.VK_RIGHT:
+					tryMove(curPiece, curX + 1, curY);
+					break;
+				case KeyEvent.VK_DOWN://우회전
+					tryMove(curPiece.rotateRight(), curX, curY);
+					break;
+				case KeyEvent.VK_UP://좌회전
+					tryMove(curPiece.rotateLeft(), curX, curY);
+					break;
+				case KeyEvent.VK_SPACE:
+					dropDown();//드롭다운형식은 즉시 드랍
+					break;
+				case 'd':
+					oneLineDown();//드롭 프레임의 가속화
+					break;
+				case 'D':
+					oneLineDown();
+					break;
 			}
-
 		}
+
 	}
 }
