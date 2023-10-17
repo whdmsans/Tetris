@@ -1,22 +1,30 @@
+/*
 package kr.ac.jbnu.se.tetris.Boundary;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TestMonitor extends JPanel {
-    /** Brace Left is P2 OneLineDrop, and Right is P2 DropDown key */
+    */
+/** Brace Left is P2 OneLineDrop, and Right is P2 DropDown key *//*
+
+    final int GRID_SIZE = 19;
+    JButton[] bt;
 
     static JLabel
             keyLeft, keyRight, keyUp, keyDown, keyD, keySpace, curDxP1, curDyP1, scoreBarP1,
             keyJ, keyL, keyI, keyK, keyBraceL,keyBraceR, curDxP2, curDyP2, scoreBarP2,
             keyP;
-    /*ArrayList<JLabel> labelArr = new ArrayList<JLabel>();
-    HashMap<JLabel, String> keyMap = new HashMap<JLabel, String>();*/
-    public TestMonitor(){
-        initBoard();
-    }
-    /** 플레이어1 & 2 방향타 및 블럭키 , 일시정지버튼 : boolean <~ KeyControl.KeyPressed & Released */
+    */
+/*ArrayList<JLabel> labelArr = new ArrayList<JLabel>();
+    HashMap<JLabel, String> keyMap = new HashMap<JLabel, String>();*//*
+
+    public TestMonitor(){ initBoard(); }
+    */
+/** 플레이어1 & 2 방향타 및 블럭키 , 일시정지버튼 : boolean <~ KeyControl.KeyPressed & Released *//*
+
     public static void setLeftKey(boolean yn) { keyLeft.setText("Left : "+yn); }
     public static void setRightKey(boolean yn) { keyRight.setText("Right : "+yn); }
     public static void setUpKey(boolean yn) { keyUp.setText("Up : "+yn); }
@@ -30,7 +38,9 @@ public class TestMonitor extends JPanel {
     public static void setBraceRKey(boolean yn) { keyBraceR.setText("Drop 2 : "+yn); }
     public static void setBraceLKey(boolean yn) { keyBraceL.setText("OneLineDown 2 : "+yn); }
     public static void setPKey(boolean yn) { keyP.setText("Pause : "+yn); }
-    /** { 플레이어1 & 2 좌표계, 플레이어1 & 2 스코어 } : int <~ Boundary.tryMove & removeFullLines */
+    */
+/** { 플레이어1 & 2 좌표계, 플레이어1 & 2 스코어 } : int <~ Boundary.tryMove & removeFullLines *//*
+
     public static void setCurDxP1(int num) { curDxP1.setText(Integer.toString(num)); }
     public static void setCurDxP2(int num) { curDxP2.setText(Integer.toString(num)); }
     public static void setCurDyP1(int num) { curDyP1.setText(Integer.toString(num)); }
@@ -45,12 +55,37 @@ public class TestMonitor extends JPanel {
         value = isP2 ? scoreBarP2 : scoreBarP1;
         return value;
     }
-    /**
+    */
+/**
      * 이니시에이션 메소드. testMonitor에 뿌려줄 JLabel 인스턴스들의 초기화과정
      * 현재 하드코딩 상태로, 추후 HashSet + enum 이나 final 형태로 인덱스 상수화하여 묶음정리 요망
-     * */
+     * *//*
+
     private void initBoard(){
-        /*JLabel[] tmpArr = {keyLeft, keyRight, keyUp, keyDown, keyD, keySpace, curDxP1, curDyP1, scoreBarP1,
+        GridBagConstraints[] gbc = new GridBagConstraints[GRID_SIZE];
+        GridBagLayout gbl = new GridBagLayout();
+        bt = new JButton[GRID_SIZE];
+        setLayout(gbl);
+        for (int i = 0; i < GRID_SIZE; i++) {
+            */
+/* Button 초기화 *//*
+
+            bt[i] = new JButton("Button" + i);
+
+            */
+/* GridBagConstraints 초기화 *//*
+
+            gbc[i] = new GridBagConstraints();
+            gbc[i].gridx = i;
+            gbc[i].gridy = i;
+
+            */
+/* Button과 GridBagConstrains Layout지정 *//*
+
+            add(bt[i], gbc[i]);
+        }
+        */
+/*JLabel[] tmpArr = {keyLeft, keyRight, keyUp, keyDown, keyD, keySpace, curDxP1, curDyP1, scoreBarP1,
                 keyJ, keyL, keyI, keyK, keyBraceL,keyBraceR, curDxP2, curDyP2, scoreBarP2,
                 keyP};
         for(int i = 0; i<tmpArr.length; i++){
@@ -60,7 +95,8 @@ public class TestMonitor extends JPanel {
                 keyJ, keyL, keyI, keyK, keyBraceL, keyBraceR, keyP};
         for(int i = 0; i<keyLabelArr.length; i++){
             keyMap.put(keyLabelArr[i],);
-        }*/
+        }*//*
+
         scoreBarP1 = new JLabel("0");
         scoreBarP2 = new JLabel("0");
         curDxP1 = new JLabel("0");
@@ -100,4 +136,4 @@ public class TestMonitor extends JPanel {
         add(keyBraceR);//P2 oneLineDrop
         add(keyP);//pause
     }
-}
+}*/

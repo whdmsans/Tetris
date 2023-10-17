@@ -1,10 +1,10 @@
 package kr.ac.jbnu.se.tetris.Control;
 
-import kr.ac.jbnu.se.tetris.Boundary.TestMonitor;
+//import kr.ac.jbnu.se.tetris.Boundary.TestMonitor;
 import kr.ac.jbnu.se.tetris.Entity.Entity;
-import kr.ac.jbnu.se.tetris.Tetris;
 import kr.ac.jbnu.se.tetris.Boundary.TetrisCanvas;
 import kr.ac.jbnu.se.tetris.Entity.Tetrominoes;
+import kr.ac.jbnu.se.tetris.Tetris;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -41,20 +41,33 @@ public class KeyControl extends KeyAdapter{
 
         if(isSingle()){
             //추후 수정 요망 1플레이어만 구성함.
-            if(key == KeyEvent.VK_J&&!isRightP2){isLeftP2 = false;
-                TestMonitor.setLeftKey(isLeftP2);}
-            if(key == KeyEvent.VK_L&&!isLeftP2){isRightP2 = false; TestMonitor.setRightKey(isRightP2);}
-            if(key == KeyEvent.VK_I&&!isDownP2){isUpP2 = false; TestMonitor.setUpKey(isUpP2);}
-            if(key == KeyEvent.VK_K&&!isUpP2){isDownP2 = false; TestMonitor.setDownKey(isDownP2);}
-            if(key == ']'&&!isOneP2){isDropP2 = false; TestMonitor.setSpaceKey(isDropP2);}
-            if(key == '['&&!isDropP2){isOneP2 = false; TestMonitor.setDKey(isOneP2);}
+//            if(key == KeyEvent.VK_J&&!isRightP2){isLeftP2 = false;
+//                TestMonitor.setLeftKey(isLeftP2);}
+//            if(key == KeyEvent.VK_L&&!isLeftP2){isRightP2 = false; TestMonitor.setRightKey(isRightP2);}
+//            if(key == KeyEvent.VK_I&&!isDownP2){isUpP2 = false; TestMonitor.setUpKey(isUpP2);}
+//            if(key == KeyEvent.VK_K&&!isUpP2){isDownP2 = false; TestMonitor.setDownKey(isDownP2);}
+//            if(key == ']'&&!isOneP2){isDropP2 = false; TestMonitor.setSpaceKey(isDropP2);}
+//            if(key == '['&&!isDropP2){isOneP2 = false; TestMonitor.setDKey(isOneP2);}
+//        }
+//        if(key == KeyEvent.VK_LEFT&&!isRight){isLeft = false; TestMonitor.setLeftKey(isLeft);}
+//        if(key == KeyEvent.VK_RIGHT&&!isLeft){isRight = false; TestMonitor.setRightKey(isRight);}
+//        if(key == KeyEvent.VK_UP&&!isDown){isUp = false; TestMonitor.setUpKey(isUp);}
+//        if(key == KeyEvent.VK_DOWN&&!isUp){isDown = false; TestMonitor.setDownKey(isDown);}
+//        if(key == KeyEvent.VK_SPACE&&!isOne){isDrop = false; TestMonitor.setSpaceKey(isDrop);}
+//        if(key == KeyEvent.VK_D&&!isDrop){isOne = false; TestMonitor.setDKey(isOne);}
+            if(key == KeyEvent.VK_J&&!isRightP2){isLeftP2 = false;}
+            if(key == KeyEvent.VK_L&&!isLeftP2){isRightP2 = false;}
+            if(key == KeyEvent.VK_I&&!isDownP2){isUpP2 = false;}
+            if(key == KeyEvent.VK_K&&!isUpP2){isDownP2 = false;}
+            if(key == ']'&&!isOneP2){isDropP2 = false;}
+            if(key == '['&&!isDropP2){isOneP2 = false;}
         }
-        if(key == KeyEvent.VK_LEFT&&!isRight){isLeft = false; TestMonitor.setLeftKey(isLeft);}
-        if(key == KeyEvent.VK_RIGHT&&!isLeft){isRight = false; TestMonitor.setRightKey(isRight);}
-        if(key == KeyEvent.VK_UP&&!isDown){isUp = false; TestMonitor.setUpKey(isUp);}
-        if(key == KeyEvent.VK_DOWN&&!isUp){isDown = false; TestMonitor.setDownKey(isDown);}
-        if(key == KeyEvent.VK_SPACE&&!isOne){isDrop = false; TestMonitor.setSpaceKey(isDrop);}
-        if(key == KeyEvent.VK_D&&!isDrop){isOne = false; TestMonitor.setDKey(isOne);}
+        if(key == KeyEvent.VK_LEFT&&!isRight){isLeft = false;}
+        if(key == KeyEvent.VK_RIGHT&&!isLeft){isRight = false;}
+        if(key == KeyEvent.VK_UP&&!isDown){isUp = false;}
+        if(key == KeyEvent.VK_DOWN&&!isUp){isDown = false;}
+        if(key == KeyEvent.VK_SPACE&&!isOne){isDrop = false;}
+        if(key == KeyEvent.VK_D&&!isDrop){isOne = false;}
         doKeyLogic();
     }
     @Override
@@ -70,21 +83,36 @@ public class KeyControl extends KeyAdapter{
         if(key=='p'||key=='P'){ player1.pause(); if(player2!=null)player2.pause(); return; }
         if(isSingle()){
             if (player2.isStarted() || getCurPiece(player2).getShape() != Tetrominoes.NoShape || !player2.isPaused()) {
-                if(key == KeyEvent.VK_J&&!isRightP2){isLeftP2 = true;TestMonitor.setLeftKey(isLeftP2);}
-                if(key == KeyEvent.VK_L&&!isLeftP2){isRightP2 = true; TestMonitor.setRightKey(isRightP2);}
-                if(key == KeyEvent.VK_I&&!isDownP2){isUpP2 = true; TestMonitor.setUpKey(isUpP2);}
-                if(key == KeyEvent.VK_K&&!isUpP2){isDownP2 = true; TestMonitor.setDownKey(isDownP2);}
-                if(key == ']'&&!isOneP2){isDropP2 = true; TestMonitor.setSpaceKey(isDropP2);}
-                if(key == '['&&!isDropP2){isOneP2 = true; TestMonitor.setDKey(isOneP2);}
+//                if(key == KeyEvent.VK_J&&!isRightP2){isLeftP2 = true;TestMonitor.setLeftKey(isLeftP2);}
+//                if(key == KeyEvent.VK_L&&!isLeftP2){isRightP2 = true; TestMonitor.setRightKey(isRightP2);}
+//                if(key == KeyEvent.VK_I&&!isDownP2){isUpP2 = true; TestMonitor.setUpKey(isUpP2);}
+//                if(key == KeyEvent.VK_K&&!isUpP2){isDownP2 = true; TestMonitor.setDownKey(isDownP2);}
+//                if(key == ']'&&!isOneP2){isDropP2 = true; TestMonitor.setSpaceKey(isDropP2);}
+//                if(key == '['&&!isDropP2){isOneP2 = true; TestMonitor.setDKey(isOneP2);}
+//            }
+//        }
+//        if (player1.isStarted() || getCurPiece(player1).getShape() != Tetrominoes.NoShape || !player1.isPaused()) {
+//            if(key == KeyEvent.VK_LEFT&&!isRight){isLeft = true;TestMonitor.setLeftKey(isLeft);}
+//            if(key == KeyEvent.VK_RIGHT&&!isLeft){isRight = true; TestMonitor.setRightKey(isRight);}
+//            if(key == KeyEvent.VK_UP&&!isDown){isUp = true; TestMonitor.setUpKey(isUp);}
+//            if(key == KeyEvent.VK_DOWN&&!isUp){isDown = true; TestMonitor.setDownKey(isDown);}
+//            if(key == KeyEvent.VK_SPACE&&!isOne){isDrop = true; TestMonitor.setSpaceKey(isDrop);}
+//            if(key == KeyEvent.VK_D&&!isDrop){isOne = true; TestMonitor.setDKey(isOne);}
+                if(key == KeyEvent.VK_J&&!isRightP2){isLeftP2 = true;}
+                if(key == KeyEvent.VK_L&&!isLeftP2){isRightP2 = true;}
+                if(key == KeyEvent.VK_I&&!isDownP2){isUpP2 = true;}
+                if(key == KeyEvent.VK_K&&!isUpP2){isDownP2 = true;}
+                if(key == ']'&&!isOneP2){isDropP2 = true;}
+                if(key == '['&&!isDropP2){isOneP2 = true;}
             }
         }
         if (player1.isStarted() || getCurPiece(player1).getShape() != Tetrominoes.NoShape || !player1.isPaused()) {
-            if(key == KeyEvent.VK_LEFT&&!isRight){isLeft = true;TestMonitor.setLeftKey(isLeft);}
-            if(key == KeyEvent.VK_RIGHT&&!isLeft){isRight = true; TestMonitor.setRightKey(isRight);}
-            if(key == KeyEvent.VK_UP&&!isDown){isUp = true; TestMonitor.setUpKey(isUp);}
-            if(key == KeyEvent.VK_DOWN&&!isUp){isDown = true; TestMonitor.setDownKey(isDown);}
-            if(key == KeyEvent.VK_SPACE&&!isOne){isDrop = true; TestMonitor.setSpaceKey(isDrop);}
-            if(key == KeyEvent.VK_D&&!isDrop){isOne = true; TestMonitor.setDKey(isOne);}
+            if(key == KeyEvent.VK_LEFT&&!isRight){isLeft = true;}
+            if(key == KeyEvent.VK_RIGHT&&!isLeft){isRight = true;}
+            if(key == KeyEvent.VK_UP&&!isDown){isUp = true;}
+            if(key == KeyEvent.VK_DOWN&&!isUp){isDown = true;}
+            if(key == KeyEvent.VK_SPACE&&!isOne){isDrop = true;}
+            if(key == KeyEvent.VK_D&&!isDrop){isOne = true;}
         }
         doKeyLogic();
     }

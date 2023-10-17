@@ -1,19 +1,16 @@
 package kr.ac.jbnu.se.tetris.Boundary;
 
 import kr.ac.jbnu.se.tetris.Control.FirebaseTool;
+import kr.ac.jbnu.se.tetris.Control.KeyControl;
 import kr.ac.jbnu.se.tetris.Control.ModePack;
-import kr.ac.jbnu.se.tetris.Entity.Chromosome;
 import kr.ac.jbnu.se.tetris.Entity.Entity;
 import kr.ac.jbnu.se.tetris.Entity.GlobalStorage;
-import kr.ac.jbnu.se.tetris.Tetris;
 import kr.ac.jbnu.se.tetris.Entity.Tetrominoes;
+import kr.ac.jbnu.se.tetris.Tetris;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -27,12 +24,11 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 	 */
 
 	public Tetrominoes[] board;
-	/** 모드 클래스 */
-	private ModePack aiMode;
 	/** 화면의 가로칸 수 */
 	public static final int BoardWidth = 10;
 	/** 화면의 세로칸 수 */
 	public static final int BoardHeight = 22;
+	private KeyControl keyCtrl;
 	/** 기본 프레임 딜레이 400 */ //딜레이 구성 변경 로직 구현하여 난이도 조절 가능할 것이라고 추측됨.
 	Timer timer;//타이머 클래스는 존재. -> 타임레코딩 가능할것이라 예상됨. 필요 리소스 = DB
 	/** ture : 블록이 바닥에 닿은 상태 <br/>
@@ -40,10 +36,6 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 	boolean isFallingFinished = false;
 	/** 게임 시작 여부 */ //KeyControl 클래스가 static이어서, 한 보드가 false되버리면 키 감지 로직 멈추는 현상 있음, 확인 요망
 	boolean isStarted = false;
-	/** 2P 모드 */
-	boolean isP2 = false;
-	/** AI 모드 */
-	boolean isAI = false;
 	/** 게임 일시정지 여부 */
 	boolean isPaused = false;
 	/** 지워진 라인 갯수 */
@@ -53,12 +45,11 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 	Tetris game;
 	GlobalStorage globalStorage;
 	FirebaseTool firebaseTool;
-	public TetrisCanvas(Tetris game, int modeNumber) {
-		selectMode(modeNumber);
+	public TetrisCanvas(Tetris game) {
 		this.game = game;
 		globalStorage = GlobalStorage.getInstance();
 		firebaseTool = FirebaseTool.getInstance();
-		//setFocusable(true); // 키입력 강제로 받도록 설정.
+		setFocusable(true); // 키입력 강제로 받도록 설정.
 		curPiece = new Entity(Tetrominoes.NoShape); // 현재 블록
 		timer = new Timer(400, this); // 이벤트간 딜레이 400
 		timer.start(); // start 메서드 첫번째 실행(Board 클래스의 start()에서 중복 실행됨)
@@ -80,14 +71,9 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 	int squareHeight() { return (int) getSize().getHeight() / BoardHeight; }
 	/** (x,y)에 블록 종류 */
 	public Tetrominoes shapeAt(int x, int y) { return board[(y * BoardWidth) + x]; }
-	public void start(int aiSeed) {
-		if(aiSeed > -1){
-			aiMode = new ModePack(this);
-			aiMode.initWeight(aiSeed);
-		}
-		if (isPaused)
-			return;
-
+	public void start() {
+		keyCtrl = new KeyControl(game);
+		addKeyListener(keyCtrl);
 		isStarted = true;
 		isFallingFinished = false;
 		numLinesRemoved = 0;
@@ -105,11 +91,14 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 			return;
 		isPaused = !isPaused;
 		if (isPaused) {
-			timer.stop();
+			/*timer.stop();
 			TestMonitor.setPKey(isPaused);
 		} else {
 			timer.start();
-			TestMonitor.setPKey(isPaused);
+			TestMonitor.setPKey(isPaused);*/
+			timer.stop();
+		} else {
+			timer.start();
 		}
 		repaint();
 	}
@@ -181,11 +170,11 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 			curPiece = new Entity(Tetrominoes.NoShape); // 떨어지는 블록 없앰
 			timer.stop();
 			isStarted = false;
-			if(!isP2()||Integer.parseInt(globalStorage.getUserBestScore())<numLinesRemoved) {
+			if(Integer.parseInt(globalStorage.getUserBestScore())<numLinesRemoved) {
 				globalStorage.setUserBestScore(String.valueOf(numLinesRemoved));
 				firebaseTool.setUserBestScore(globalStorage.getUserID(), String.valueOf(numLinesRemoved));// 베스트 스코어 업데이트
 			}
-			TestMonitor.setScore(-1,isP2);
+			//TestMonitor.setScore(-1,false);//isP2제거를 위해 이후 리팩토링
 		}
 	}
 	/** 블록 움직일 수 있는지 여부 반환<br/>
@@ -201,8 +190,8 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 		}
 		curPiece = newPiece;
 		curPiece.setPosition(newX,newY);
-		TestMonitor.setCurDxP1(curPiece.getCurX());
-		TestMonitor.setCurDyP1(curPiece.getCurY());
+		/*TestMonitor.setCurDxP1(curPiece.getCurX());
+		TestMonitor.setCurDyP1(curPiece.getCurY());*/
 		repaint();
 		return true;
 	}
@@ -232,7 +221,7 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 		// 완성된 라인이 있다면 UI업데이트
 		if (numFullLines > 0) {
 			numLinesRemoved += numFullLines;
-			TestMonitor.setScore(numLinesRemoved,isP2);
+			//TestMonitor.setScore(numLinesRemoved,false); 테스트 모니터 오류
 			isFallingFinished = true;
 			curPiece = new Entity(Tetrominoes.NoShape);
 			repaint();
@@ -250,27 +239,14 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 		g.drawLine(x + 1, y + squareHeight() - 1, x + squareWidth() - 1, y + squareHeight() - 1);
 		g.drawLine(x + squareWidth() - 1, y + squareHeight() - 1, x + squareWidth() - 1, y + 1);
 	}
-	public void setCurPiece(Entity curPiece) {
-		this.curPiece = curPiece;
-	}
+	public void updateCurPiece(Entity curPiece) { this.curPiece = curPiece; }
 	public Entity getCurPiece(){ return curPiece; }
 	public boolean isFallingFinished() { return isFallingFinished; }
 	public boolean isPaused(){ return isPaused; }
-	protected boolean isP2(){ return isP2; }
+	/** 아무렇게나 손대면 안됩니다. 게임 실행도중 바꾸면 키입력 안먹을 수도 있어요. */ //리팩토링 위해 제거 단계 진행중.
+	/*public void setP2(boolean yn){ this.isP2 = yn; }
+	public boolean isP2(){ return isP2; }*/
 	public boolean isStarted(){ return isStarted; }
-	private void selectMode(int i){
-		switch (i){
-			case 1:
-				isP2 = true;
-				isAI = false;
-				break;
-			case 2:
-				isP2 = false;
-				isAI = true;
-				break;
-			default:
-				isP2 = false;
-				isAI = false;
-		}
-	}
+	public Timer getTimer(){ return timer; }
+	public int getNumLinesRemoved() { return numLinesRemoved; }
 }

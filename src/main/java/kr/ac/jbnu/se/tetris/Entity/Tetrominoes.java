@@ -5,7 +5,7 @@ import java.awt.*;
 public enum Tetrominoes {
 
 	/** 블럭 형상 정보 인스턴스. 인덱싱 변수 idx를 포함하고 있음 */
-	NoShape, ZShape, SShape, LineShape, TShape, SquareShape, LShape, MirroredLShape;
+	NoShape, ZShape, SShape, LineShape, TShape, SquareShape, LShape, MirroredLShape, GrayLineShape;
 	/** 인스턴스 컴파일시 자동으로 enum들에게 배정됨 */
 	public Color getColor(){
 		Color color;
@@ -33,6 +33,9 @@ public enum Tetrominoes {
 				break;
 			case 7:
 				color = new Color(218, 170, 0);
+				break;
+			case 8:
+				color = new Color(90, 90, 90);
 				break;
 			default:
 				color = null;
@@ -65,6 +68,9 @@ public enum Tetrominoes {
 				break;
 			case 7:
 				shape = new int[][] { { 1, -1 }, { 0, -1 }, { 0, 0 }, { 0, 1 } }.clone();
+				break;
+			case 8:
+				shape = new int[][] { { 0, -1 }, { 0, 0 }, { 0, 1 }, { 0, 2 } }.clone();
 				break;
 			default:
 				return null;

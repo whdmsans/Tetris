@@ -145,7 +145,7 @@ public class ModePack {
         move_left(block);
         big_weight_block = new Entity(Tetrominoes.NoShape); //ret[1] 구문 이니셜라이징이 필요하므로 넣어둠.
         temp_block = new Entity(block.getShape());
-        canvas.setCurPiece(temp_block);
+        canvas.updateCurPiece(temp_block);
         while (true) {
             if (canvas.dropDown()) {
                 // 블럭을 아래로 다 내렸을 경우, 현재 가중치 값 계산

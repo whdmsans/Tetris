@@ -160,7 +160,7 @@ public class Entity {
      */
     public void setRandomShape() {
         Random r = new Random();
-        int x = Math.abs(r.nextInt()) % 7 + 1;
+        int x = Math.abs(r.nextInt()) % 8 + 1;
         Tetrominoes[] values = Tetrominoes.values();
         initFunc(values[x]);
     }
