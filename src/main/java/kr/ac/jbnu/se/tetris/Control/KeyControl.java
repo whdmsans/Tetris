@@ -1,6 +1,7 @@
 package kr.ac.jbnu.se.tetris.Control;
 
 import kr.ac.jbnu.se.tetris.Boundary.TestMonitor;
+import kr.ac.jbnu.se.tetris.Entity.Entity;
 import kr.ac.jbnu.se.tetris.Tetris;
 import kr.ac.jbnu.se.tetris.Boundary.TetrisCanvas;
 import kr.ac.jbnu.se.tetris.Entity.Tetrominoes;
@@ -16,7 +17,7 @@ public class KeyControl extends KeyAdapter{
     public KeyControl(Tetris game){
         this.game = game;
 
-        this.player1 = game.boundary;
+        this.player1 = game.getP1();
         isLeft=false;
         isRight=false;
         isUp=false;
@@ -24,7 +25,7 @@ public class KeyControl extends KeyAdapter{
         isOne=false;
         isDrop=false;
 
-        this.player2 = game.boundary2;
+        this.player2 = game.getP2();
         isLeftP2=false;
         isRightP2=false;
         isUpP2=false;
@@ -32,12 +33,12 @@ public class KeyControl extends KeyAdapter{
         isOneP2=false;
         isDropP2=false;
     }
-    public boolean isSingle(){return player2==null;}
+    public boolean isSingle(){ return player2 != null; }
     @Override
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
 
-        if(!isSingle()){
+        if(isSingle()){
             //추후 수정 요망 1플레이어만 구성함.
             if(key == KeyEvent.VK_J&&!isRightP2){isLeftP2 = false;
                 TestMonitor.setLeftKey(isLeftP2);}
@@ -57,14 +58,17 @@ public class KeyControl extends KeyAdapter{
     }
     @Override
     public void keyPressed(KeyEvent e) {
-        if ((!player1.isStarted() || player1.getCurPiece().getShape() == Tetrominoes.NoShape)&&
-                (!player2.isStarted() || player2.getCurPiece().getShape() == Tetrominoes.NoShape)) {
+        if (!player1.isStarted() || getCurPiece(player1).getShape() == Tetrominoes.NoShape) {
             return;
         }
+        else if(player2!=null){
+            if((!player2.isStarted() || getCurPiece(player2).getShape() == Tetrominoes.NoShape))
+                return;
+        }
         int key = e.getKeyCode();
-        if(key=='p'||key=='P'){ player1.pause(); player2.pause(); return; }
-        if(!isSingle()){
-            if (player2.isStarted() || player2.getCurPiece().getShape() != Tetrominoes.NoShape || !player2.isPaused()) {
+        if(key=='p'||key=='P'){ player1.pause(); if(player2!=null)player2.pause(); return; }
+        if(isSingle()){
+            if (player2.isStarted() || getCurPiece(player2).getShape() != Tetrominoes.NoShape || !player2.isPaused()) {
                 if(key == KeyEvent.VK_J&&!isRightP2){isLeftP2 = true;TestMonitor.setLeftKey(isLeftP2);}
                 if(key == KeyEvent.VK_L&&!isLeftP2){isRightP2 = true; TestMonitor.setRightKey(isRightP2);}
                 if(key == KeyEvent.VK_I&&!isDownP2){isUpP2 = true; TestMonitor.setUpKey(isUpP2);}
@@ -73,7 +77,7 @@ public class KeyControl extends KeyAdapter{
                 if(key == '['&&!isDropP2){isOneP2 = true; TestMonitor.setDKey(isOneP2);}
             }
         }
-        if (player1.isStarted() || player1.getCurPiece().getShape() != Tetrominoes.NoShape || !player1.isPaused()) {
+        if (player1.isStarted() || getCurPiece(player1).getShape() != Tetrominoes.NoShape || !player1.isPaused()) {
             if(key == KeyEvent.VK_LEFT&&!isRight){isLeft = true;TestMonitor.setLeftKey(isLeft);}
             if(key == KeyEvent.VK_RIGHT&&!isLeft){isRight = true; TestMonitor.setRightKey(isRight);}
             if(key == KeyEvent.VK_UP&&!isDown){isUp = true; TestMonitor.setUpKey(isUp);}
@@ -87,19 +91,22 @@ public class KeyControl extends KeyAdapter{
         /**
          * 일시정지, 드롭다운은 즉각 처리. switch문 이전에 KeyPressed에서 처리함
          * 아래는 키값의 상수처리, 이를 합연산으로 처리 구분*/
-        if(!isSingle()){
+        if(isSingle()){
             if(isDropP2){player2.dropDown();return;}
-            if(isLeftP2) player2.tryMove(player2.getCurPiece(),player2.getCurX()-1,player2.getCurY());
-            if(isRightP2) player2.tryMove(player2.getCurPiece(),player2.getCurX()+1,player2.getCurY());
-            if(isUpP2) player2.tryMove(player2.getCurPiece().rotateLeft(),player2.getCurX(),player2.getCurY());
-            if(isDownP2) player2.tryMove(player2.getCurPiece().rotateRight(),player2.getCurX(),player2.getCurY());
-            if(isOneP2) player2.tryMove(player2.getCurPiece(),player2.getCurX(),player2.getCurY()-1);
+            if(isLeftP2) player2.tryMove(getCurPiece(player2),getX(player2)-1,getY(player2));
+            if(isRightP2) player2.tryMove(getCurPiece(player2),getX(player2)+1,getY(player2));
+            if(isUpP2) player2.tryMove(getCurPiece(player2).rotateLeft(),getX(player2),getY(player2));
+            if(isDownP2) player2.tryMove(getCurPiece(player2).rotateRight(),getX(player2),getY(player2));
+            if(isOneP2) player2.tryMove(getCurPiece(player2),getX(player2),getY(player2)-1);
         }
         if(isDrop) {player1.dropDown(); return;}
-        if(isLeft) player1.tryMove(player1.getCurPiece(),player1.getCurX()-1,player1.getCurY());
-        if(isRight) player1.tryMove(player1.getCurPiece(),player1.getCurX()+1,player1.getCurY());
-        if(isUp) player1.tryMove(player1.getCurPiece().rotateLeft(),player1.getCurX(),player1.getCurY());
-        if(isDown) player1.tryMove(player1.getCurPiece().rotateRight(),player1.getCurX(),player1.getCurY());
-        if(isOne) player1.tryMove(player1.getCurPiece(),player1.getCurX(),player1.getCurY()-1);
+        if(isLeft) player1.tryMove(getCurPiece(player1),getX(player1)-1,getY(player1));
+        if(isRight) player1.tryMove(getCurPiece(player1),getX(player1)+1,getY(player1));
+        if(isUp) player1.tryMove(getCurPiece(player1).rotateLeft(),getX(player1),getY(player1));
+        if(isDown) player1.tryMove(getCurPiece(player1).rotateRight(),getX(player1),getY(player1));
+        if(isOne) player1.tryMove(getCurPiece(player1),getX(player1),getY(player1)-1);
     }
+    Entity getCurPiece(TetrisCanvas player){ return player.getCurPiece(); }
+    int getX(TetrisCanvas player){ return getCurPiece(player).getCurX(); }
+    int getY(TetrisCanvas player){ return getCurPiece(player).getCurY(); }
 }

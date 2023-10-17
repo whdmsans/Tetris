@@ -3,15 +3,12 @@ package kr.ac.jbnu.se.tetris.Entity;
 import java.awt.*;
 
 public enum Tetrominoes {
-	// NoShape는 빈 공간을 의미
-	NoShape(0), ZShape(1), SShape(2), LineShape(3), TShape(4), SquareShape(5), LShape(6), MirroredLShape(7);
-	private int idx;
-	Tetrominoes(int idx){
-		this.idx = idx;
-	}
+	/** 블럭 형상 정보 인스턴스. 인덱싱 변수 idx를 포함하고 있음 */
+	NoShape, ZShape, SShape, LineShape, TShape, SquareShape, LShape, MirroredLShape;
+	/** 인스턴스 컴파일시 자동으로 enum들에게 배정됨 */
 	public Color getColor(){
 		Color color;
-		switch(idx) {
+		switch(this.ordinal()) {
 			case 0:
 				color = new Color(0, 0, 0);
 				break;
@@ -43,7 +40,7 @@ public enum Tetrominoes {
 	}
 	public int[][] getShapeArr() {
 		int[][] shape;
-		switch(idx){
+		switch(this.ordinal()){
 			case 0:
 				shape = new int[][] { { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } };
 				break;
