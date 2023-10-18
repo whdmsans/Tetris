@@ -118,6 +118,8 @@ public class Tetris extends JFrame {//테트리스 클래스
 				modeHandler.startGame();
 				break;
 			case AI_MODE:
+				modeHandler = new AIModeHandler(this);
+				modeHandler.startGame();
 				break;
 			case PVP_MODE:
 				// Local 대전
@@ -130,6 +132,7 @@ public class Tetris extends JFrame {//테트리스 클래스
 	public TetrisCanvas getP2(){ return boundary2 != null ? boundary2 : null; }
 	public void updateP1(TetrisCanvas boundary){ this.boundary=boundary; }
 	public void updateP2(TetrisCanvas boundary){ this.boundary2=boundary; }
+
 	public static void main(String[] args) {//메인실행코드
 		SwingUtilities.invokeLater(() -> {
 			Tetris game = new Tetris();
