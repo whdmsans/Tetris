@@ -16,9 +16,10 @@ public class LocalModeHandler extends NormalModeHandler implements GameModeHandl
     @Override
     public void startGame() {
         normal.startGame();
-        connectCanvas();
         tetris.inputGameUI(canvas);
+        connectCanvas();
         canvas.start();
+        normal.getCanvas().requestFocusInWindow();
     }
     @Override
     public void connectCanvas() {tetris.updateP2(this.canvas);}
