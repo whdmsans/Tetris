@@ -27,7 +27,7 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 	public static final int BoardWidth = 10;
 	/** 화면의 세로칸 수 */
 	public static final int BoardHeight = 22;
-	private KeyControl keyCtrl;
+	protected KeyControl keyCtrl;
 	/** 기본 프레임 딜레이 400 */ //딜레이 구성 변경 로직 구현하여 난이도 조절 가능할 것이라고 추측됨.
 	Timer timer;//타이머 클래스는 존재. -> 타임레코딩 가능할것이라 예상됨. 필요 리소스 = DB
 	/** ture : 블록이 바닥에 닿은 상태 <br/>
@@ -78,8 +78,8 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 		numLinesRemoved = 0;
 		clearBoard();
 
-		newPiece();
 		timer.start(); // start 메서드 두번째 실행(클래스의 생성자에서 중복 실행됨)
+		newPiece();
 	}
 	/**
 	 * 일시정지 메소드
@@ -137,7 +137,7 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 		return true;
 	}
 	/** 블록이 한줄 아래로 내려가는 메소드*/
-	private void oneLineDown() {
+	protected void oneLineDown() {
 		if (!tryMove(curPiece, curPiece.getCurX(), curPiece.getCurY() - 1))
 			pieceDropped(); //떨어지면 수행되는 메소드, 드롭다운과 동일
 	}
@@ -147,7 +147,7 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 			board[i] = Tetrominoes.NoShape;
 	}
 	/** 현재 위치에 블록을 남기는 메소드 */
-	private void pieceDropped() {
+	protected void pieceDropped() {
 		// 현재 위치에 블록 배치
 		for (int i = 0; i < 4; ++i) {
 			int x = curPiece.getCurX() + curPiece.x(i);
@@ -161,7 +161,7 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 			newPiece();
 	}
 	/** 새 블록 생성 */
-	private void newPiece() {
+	protected void newPiece() {
 		// 블록 종류 및 위치 수정
 		curPiece.setRandomShape();
 		// 블록이 움직이지 못할 때(게임 종료)
@@ -195,7 +195,7 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 		return true;
 	}
 	/** 완성된 줄 제거 */
-	private void removeFullLines() {
+	protected void removeFullLines() {
 		int numFullLines = 0; // 완성된 줄의 수
 
 		// 위에서부터 내려오면서 찾기
@@ -227,7 +227,7 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 		}
 	}
 	/** 칸을 블록의 종류에 맞게 색칠하는 메소드 */
-	private void drawSquare(Graphics g, int x, int y, Tetrominoes shape) {
+	protected void drawSquare(Graphics g, int x, int y, Tetrominoes shape) {
 		Color tmpcolor = shape.getColor();
 		g.setColor(tmpcolor);
 		g.fillRect(x + 1, y + 1, squareWidth() - 2, squareHeight() - 2);
