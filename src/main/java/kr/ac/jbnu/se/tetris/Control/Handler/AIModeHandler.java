@@ -20,6 +20,7 @@ public class AIModeHandler extends NormalModeHandler implements GameModeHandler{
         this.connectCanvas();
         tetris.inputGameUI(canvas);
         canvas.start();
+        AI.getCanvas().requestFocusInWindow();
     }
     @Override
     public void connectCanvas() {
