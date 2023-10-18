@@ -37,17 +37,14 @@ public class SprintModeHandler extends NormalModeHandler implements GameModeHand
     @Override
     public void startGame() {
         super.startGame();
-
-        tetris.add(board, BorderLayout.CENTER);
-        tetris.add(sprintModeStatusbar, BorderLayout.NORTH);
         updateTargetLineCount();
         updateStatusbarText();
         gameClearAchieved = false;
-        this.board.setLayout(new OverlayLayout(this.board));
-        this.board.add(gameClearStatusLabel);
+        getCanvas().setLayout(new OverlayLayout(getCanvas()));
+        getCanvas().add(gameClearStatusLabel);
         gameClearStatusLabel.setVisible(false);
         checkGameClear();
-        board.requestFocusInWindow();
+        getCanvas().requestFocusInWindow();
         sprintModeStatusbar.setVisible(true);
     }
 
