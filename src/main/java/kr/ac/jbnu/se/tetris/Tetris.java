@@ -106,11 +106,11 @@ public class Tetris extends JFrame {//테트리스 클래스
 				modeHandler.startGame();
 				break;
 			case ITEM_MODE:
-//				modeHandler = new ItemModeHandler(this);
+				modeHandler = new ItemModeHandler(this);
 				modeHandler.startGame();
 				break;
 			case SURVIVAL_MODE:
-//				modeHandler = new SurvivalModeHandler(this);
+				modeHandler = new SurvivalModeHandler(this);
 				modeHandler.startGame();
 				break;
 			case SPRINT_MODE:
@@ -118,18 +118,9 @@ public class Tetris extends JFrame {//테트리스 클래스
 				modeHandler.startGame();
 				break;
 			case AI_MODE:
-				// AI ���
-
-				//하단부 코드가 원래 TetrisCanvas void start(int aiSeed)에서 실행됐었습니다.
-				/*if(aiSeed > -1){
-			aiMode = new ModePack(this);
-			aiMode.initWeight(aiSeed);
-		}
-		if (isPaused)
-			return;*/
 				break;
 			case PVP_MODE:
-				// PVP ���
+				// Local 대전
 				modeHandler = new LocalModeHandler(this);
 				modeHandler.startGame();
 				break;

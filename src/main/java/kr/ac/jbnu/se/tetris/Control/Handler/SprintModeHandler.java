@@ -2,24 +2,25 @@ package kr.ac.jbnu.se.tetris.Control.Handler;
 
 import kr.ac.jbnu.se.tetris.Boundary.TetrisCanvas;
 import kr.ac.jbnu.se.tetris.Tetris;
+import org.checkerframework.checker.units.qual.N;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
 
-public class SprintModeHandler implements GameModeHandler {
+public class SprintModeHandler extends NormalModeHandler implements GameModeHandler {
     private final Tetris tetris;
-    private final TetrisCanvas board;
+    //private final TetrisCanvas canvas;
     private final JLabel sprintModeStatusbar;
     private JLabel gameClearStatusLabel;
     private int targetLineCount; // 목표 라인 개수
     private boolean gameClearAchieved; // Game Clear 상태 여부
     private final Random random;
-
+    private NormalModeHandler normal;
 
     public SprintModeHandler(Tetris tetris) {
+        super(tetris);
         this.tetris = tetris;
-        this.board = new TetrisCanvas(tetris);
         this.sprintModeStatusbar = new JLabel();
         this.gameClearAchieved = false;
         this.random = new Random();
@@ -35,33 +36,37 @@ public class SprintModeHandler implements GameModeHandler {
 
     @Override
     public void startGame() {
-        tetris.add(board, BorderLayout.CENTER);
-        tetris.add(sprintModeStatusbar, BorderLayout.NORTH);
-        getBoundary();
-        board.start();
-        updateTargetLineCount();
-        updateStatusbarText();
-        gameClearAchieved = false;
-        this.board.setLayout(new OverlayLayout(this.board));
-        this.board.add(gameClearStatusLabel);
-        gameClearStatusLabel.setVisible(false);
-        checkGameClear();
-        board.requestFocusInWindow();
-        sprintModeStatusbar.setVisible(true);
+        super.startGame();
+
+//        tetris.add(board, BorderLayout.CENTER);
+//        tetris.add(sprintModeStatusbar, BorderLayout.NORTH);
+//        getBoundary();
+//        board.start();
+//        updateTargetLineCount();
+//        updateStatusbarText();
+//        gameClearAchieved = false;
+//        this.board.setLayout(new OverlayLayout(this.board));
+//        this.board.add(gameClearStatusLabel);
+//        gameClearStatusLabel.setVisible(false);
+//        checkGameClear();
+//        board.requestFocusInWindow();
+//        sprintModeStatusbar.setVisible(true);
     }
 
     @Override
-    public void getBoundary() {
-        tetris.updateP1(this.board);
+    public void connectCanvas() {
+        tetris.updateP1(getCanvas());
     }
+    @Override
+    public TetrisCanvas getCanvas() {return super.getCanvas();}
 
     public void checkGameClear() {
-        if (board.getNumLinesRemoved() >= targetLineCount && !gameClearAchieved) {
+        if (getCanvas().getNumLinesRemoved() >= targetLineCount && !gameClearAchieved) {
             gameClearAchieved = true;
             gameClearStatusLabel.setText("Game Clear!");
             gameClearStatusLabel.setVisible(true);
-            board.getTimer().stop();
-            board.setEnabled(false);
+            getCanvas().getTimer().stop();
+            getCanvas().setEnabled(false);
             tetris.repaint();
         }
     }
