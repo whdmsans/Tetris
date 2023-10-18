@@ -5,26 +5,24 @@ import kr.ac.jbnu.se.tetris.Tetris;
 
 public class LocalModeHandler extends NormalModeHandler implements GameModeHandler{
     private final Tetris tetris;
-    private final TetrisCanvas board2;
-    private NormalModeHandler nomal;
+    private final TetrisCanvas canvas;
+    NormalModeHandler normal;
     public LocalModeHandler(Tetris tetris){
         super(tetris);
-        nomal = new NormalModeHandler(tetris);
+        this.normal = new NormalModeHandler(tetris);
         this.tetris = tetris;
-        this.board2 = new TetrisCanvas(tetris);
+        this.canvas = new TetrisCanvas(tetris);
     }
     @Override
     public void startGame() {
-        nomal.startGame();
-        this.connectCanvas();
-        tetris.inputGameUI(board2);
-        board2.start();
+        normal.startGame();
+        tetris.inputGameUI(canvas);
+        connectCanvas();
+        canvas.start();
+        normal.getCanvas().requestFocusInWindow();
     }
     @Override
-    public void connectCanvas() {
-        tetris.updateP2(this.board2);
-    }
-
+    public void connectCanvas() {tetris.updateP2(this.canvas);}
     @Override
-    public TetrisCanvas getCanvas() { return this.board2; }
+    public TetrisCanvas getCanvas() { return this.canvas; }
 }

@@ -145,7 +145,7 @@ public class Tetris extends JFrame {//테트리스 클래스
 		gameUIPanel.add(target);
 		this.revalidate();
 		this.repaint();
-		target.requestFocusInWindow();
+		requestFocusInWindow();
 	}
 	public static boolean containsComponent(Container container, Component component) {
 		Component[] components = container.getComponents();
