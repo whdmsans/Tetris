@@ -11,6 +11,7 @@ import static kr.ac.jbnu.se.tetris.Tetris.*;
 public class NormalModeHandler implements GameModeHandler {
     private final Tetris tetris;
     private final TetrisCanvas canvas;
+    static JPanel uiBoard;
 
     public NormalModeHandler(Tetris tetris) {
         this.tetris = tetris;
@@ -22,11 +23,10 @@ public class NormalModeHandler implements GameModeHandler {
         connectCanvas();
         tetris.inputGameUI(canvas);
         canvas.start();
-        //UIBoard추후 삽입요망
-        JPanel dummyUIBoard = new JPanel();
-        dummyUIBoard.setPreferredSize(new Dimension(gameUIBlockWidth,gameUIBlockHeight));
-        dummyUIBoard.setBackground(Color.GREEN);
-        tetris.inputGameUI(dummyUIBoard);
+        uiBoard = new JPanel();
+        uiBoard.setPreferredSize(new Dimension(gameUIBlockWidth,gameUIBlockHeight));
+        uiBoard.setBackground(Color.YELLOW);
+        tetris.inputGameUI(uiBoard);
         canvas.requestFocusInWindow();
     }
 
@@ -35,4 +35,10 @@ public class NormalModeHandler implements GameModeHandler {
 
     @Override
     public TetrisCanvas getCanvas() { return this.canvas; }
+    public static void addUI(JFrame component){
+        uiBoard.add(component);
+        uiBoard.revalidate();
+        uiBoard.repaint();
+    }
+
 }
