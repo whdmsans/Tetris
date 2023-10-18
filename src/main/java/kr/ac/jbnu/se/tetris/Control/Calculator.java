@@ -10,13 +10,10 @@ import static kr.ac.jbnu.se.tetris.Boundary.TetrisCanvas.BoardHeight;
 import static kr.ac.jbnu.se.tetris.Boundary.TetrisCanvas.BoardWidth;
 
 public class Calculator {
-
-    private Tetrominoes[] board;
     private TetrisCanvas canvas;
 
-    public Calculator (TetrisCanvas canvas, Tetrominoes[] board) {
+    public Calculator (TetrisCanvas canvas) {
         this.canvas = canvas;
-        this.board = board;
     }
 
     public Double blockFitness(double[] weight) {

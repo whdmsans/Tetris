@@ -23,6 +23,12 @@ public class Entity {
         initFunc(shape);
     }
 
+    public void copyEntity(Entity entity) {
+        this.shape = entity.getShape();
+        setPosition(entity.getCurX(), entity.getCurY());
+        setShapeArr(entity.getShapeArr());
+    }
+
     /**
      * Tetrominoes에 고정 정보들에 대한 접근 및 복사
      */
@@ -90,6 +96,14 @@ public class Entity {
         return coords;
     }
 
+    public void setShapeArr(int[][] coords) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 2; j++) {
+                this.coords[i][j] = coords[i][j];
+            }
+        }
+    }
+
     /**
      * 블록의 가장 왼쪽 칸의 x좌표를 반환
      */
@@ -126,33 +140,57 @@ public class Entity {
     /**
      * 복사된 entity를 newPiece에 전달, tryMove가 처리. 좌회전
      */
-    public Entity rotateLeft() {
+//    public Entity rotateLeft() {
+//        if (getShape() == Tetrominoes.SquareShape) // 블록이 사각형인 경우 종료
+//            return this;
+//        Entity result = new Entity(this.shape);
+//        /*
+//         * color는 고정으로 얕은 복사여도 되나, shape는 clone()으로 깊은복사해서 entity에 던져주는게 맞음.
+//         * enum type은 공유되는 공간으로써 인스턴스의 변수들은 공유되는 것으로 사료됨.
+//         * */
+//        for (int i = 0; i < 4; ++i) {
+//            result.updateX(i, y(i));
+//            result.updateY(i, -x(i));
+//        }
+//        return result;
+//    }
+
+    public void rotateLeft() {
         if (getShape() == Tetrominoes.SquareShape) // 블록이 사각형인 경우 종료
-            return this;
-        Entity result = new Entity(this.shape);
-        /*
-         * color는 고정으로 얕은 복사여도 되나, shape는 clone()으로 깊은복사해서 entity에 던져주는게 맞음.
-         * enum type은 공유되는 공간으로써 인스턴스의 변수들은 공유되는 것으로 사료됨.
-         * */
+            return;
+        int[][] result = new int[4][2];
         for (int i = 0; i < 4; ++i) {
-            result.updateX(i, y(i));
-            result.updateY(i, -x(i));
+            result[i][0] = coords[i][1];
+            result[i][1] = -coords[i][0];
         }
-        return result;
+        setShapeArr(result);
+        return;
     }
 
     /**
      * 복사된 entity를 newPiece에 전달, tryMove가 처리. 우회전
      */
-    public Entity rotateRight() {
+//    public Entity rotateRight() {
+//        if (getShape() == Tetrominoes.SquareShape) // 블록이 사각형인 경우 종료
+//            return this;
+//        Entity result = new Entity(this.shape);
+//        for (int i = 0; i < 4; ++i) {
+//            result.updateX(i, -y(i));
+//            result.updateY(i, x(i));
+//        }
+//        return result;
+//    }
+
+    public void rotateRight() {
         if (getShape() == Tetrominoes.SquareShape) // 블록이 사각형인 경우 종료
-            return this;
-        Entity result = new Entity(this.shape);
+            return;
+        int[][] result = new int[4][2];
         for (int i = 0; i < 4; ++i) {
-            result.updateX(i, -y(i));
-            result.updateY(i, x(i));
+            result[i][0] = -coords[i][1];
+            result[i][1] = coords[i][0];
         }
-        return result;
+        setShapeArr(result);
+        return;
     }
 
     /**

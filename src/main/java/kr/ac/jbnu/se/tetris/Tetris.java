@@ -118,6 +118,8 @@ public class Tetris extends JFrame {//테트리스 클래스
 				modeHandler.startGame();
 				break;
 			case AI_MODE:
+				modeHandler = new AIModeHandler(this);
+				modeHandler.startGame();
 				break;
 			case PVP_MODE:
 				// Local 대전
