@@ -25,25 +25,6 @@ public class AIControl {
         setDefaultWeight();
     }
 
-    public void doControlLogic() {
-        int[] goodPosition = findGoodPosition(canvas.getCurPiece());
-        for (int i = goodPosition[2]; i > 0; i--) {
-            canvas.getCurPiece().rotateRight();
-        }
-        int num = canvas.getCurPiece().getCurX() - goodPosition[0];
-        while (num != 0){
-            if (num > 0) {
-                canvas.tryMove(canvas.getCurPiece(), canvas.getX() - 1, canvas.getY());
-                num--;
-            } else if (num < 0) {
-                canvas.tryMove(canvas.getCurPiece(), canvas.getX() + 1, canvas.getY());
-                num++;
-            }
-        }
-
-//        canvas.dropDown();
-    }
-
     public AIControl(TetrisCanvasAI canvas, double[] weight) {
         this.canvas = canvas;
         random = new Random();
@@ -91,7 +72,7 @@ public class AIControl {
         temp_block = new Entity(Tetrominoes.NoShape);
         while (true) {
             temp_block.copyEntity(block);
-            if (canvas.move_down(temp_block)) {
+            if (move_down(temp_block)) {
                 // 블럭을 아래로 다 내렸을 경우, 현재 가중치 값 계산
                 placeShape(temp_block);
                 double fitness = calculator.blockFitness(weight);
@@ -134,6 +115,16 @@ public class AIControl {
             int idx = y * BoardWidth + x;
             canvas.board[idx] = shape.getShape();
         }
+    }
+
+    public boolean move_down(Entity temp_block) {
+        int newY = temp_block.getCurY();
+        while (newY > 0) {
+            if (!canvas.tryMoveAI(temp_block, temp_block.getCurX(), newY - 1))
+                break;
+            --newY;
+        }
+        return true;
     }
 
     private boolean move_right(Entity shape) {
