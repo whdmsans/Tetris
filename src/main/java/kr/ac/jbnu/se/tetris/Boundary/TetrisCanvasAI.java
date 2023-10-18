@@ -43,7 +43,9 @@ public class TetrisCanvasAI extends TetrisCanvas {
 	}
 
 	public void doControlLogic() {
-		int[] goodPosition = aiControl.findGoodPosition(getCurPiece());
+		Entity tmp_Entity = new Entity(Tetrominoes.NoShape);
+		tmp_Entity.copyEntity(getCurPiece());
+		int[] goodPosition = aiControl.findGoodPosition(tmp_Entity);
 
 //		for (int i = 0; i < 3; i++) {
 //			System.out.println("goodPosition[" + i + "] : " + goodPosition[i]);
@@ -56,25 +58,15 @@ public class TetrisCanvasAI extends TetrisCanvas {
 		int num = curPiece.getCurX() - goodPosition[0];
 		while (num != 0){
 			if (num > 0) {
-				tryMove(curPiece, curPiece.getCurX() - 1, curPiece.getCurX());
+				tryMove(curPiece, curPiece.getCurX() - 1, curPiece.getCurY());
 				num--;
 			} else if (num < 0) {
-				tryMove(curPiece, curPiece.getCurX() + 1, curPiece.getCurX());
+				tryMove(curPiece, curPiece.getCurX() + 1, curPiece.getCurY());
 				num++;
 			}
 		}
 
 //        canvas.dropDown();
-	}
-
-	public boolean move_down(Entity temp_block) {
-		int newY = temp_block.getCurY();
-		while (newY > 0) {
-			if (!tryMove(temp_block, temp_block.getCurX(), newY - 1))
-				break;
-			--newY;
-		}
-		return true;
 	}
 	public boolean tryMoveAI(Entity newPiece, int newX, int newY) {
 		for (int i = 0; i < 4; ++i) {
