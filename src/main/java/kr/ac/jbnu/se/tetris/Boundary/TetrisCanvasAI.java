@@ -1,37 +1,19 @@
 package kr.ac.jbnu.se.tetris.Boundary;
 
 import kr.ac.jbnu.se.tetris.Control.AIControl;
-import kr.ac.jbnu.se.tetris.Control.FirebaseTool;
-import kr.ac.jbnu.se.tetris.Control.KeyControl;
 import kr.ac.jbnu.se.tetris.Entity.Entity;
-import kr.ac.jbnu.se.tetris.Entity.GlobalStorage;
 import kr.ac.jbnu.se.tetris.Entity.Tetrominoes;
 import kr.ac.jbnu.se.tetris.Tetris;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class TetrisCanvasAI extends TetrisCanvas {
 
 	private AIControl aiControl;
 	public TetrisCanvasAI(Tetris game) {
 		super(game);
+		timer = new Timer(100, this); // 이벤트간 딜레이 400
 		aiControl = new AIControl(this);
-	}
-
-	@Override
-	public void start() {
-		keyCtrl = new KeyControl(game);
-		addKeyListener(keyCtrl);
-		isStarted = true;
-		isFallingFinished = false;
-		numLinesRemoved = 0;
-		clearBoard();
-
-		timer.start();
-		newPiece();
 	}
 
 	@Override
