@@ -78,8 +78,8 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 		numLinesRemoved = 0;
 		clearBoard();
 
-		newPiece();
 		timer.start(); // start 메서드 두번째 실행(클래스의 생성자에서 중복 실행됨)
+		newPiece();
 	}
 	/**
 	 * 일시정지 메소드
