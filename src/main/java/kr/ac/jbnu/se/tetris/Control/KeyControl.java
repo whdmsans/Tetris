@@ -137,15 +137,15 @@ public class KeyControl extends KeyAdapter{
             if(isDropP2){player2.dropDown();return;}
             if(isLeftP2) player2.tryMove(getCurPiece(player2),getX(player2)-1,getY(player2));
             if(isRightP2) player2.tryMove(getCurPiece(player2),getX(player2)+1,getY(player2));
-            if(isUpP2) getCurPiece(player2).rotateLeft();
-            if(isDownP2) getCurPiece(player2).rotateRight();
+            if(isUpP2) player2.rotateLeft(getCurPiece(player2));
+            if(isDownP2) player2.rotateRight(getCurPiece(player2));
             if(isOneP2) player2.tryMove(getCurPiece(player2),getX(player2),getY(player2)-1);
         }
         if(isDrop) {player1.dropDown(); return;}
         if(isLeft) player1.tryMove(getCurPiece(player1),getX(player1)-1,getY(player1));
         if(isRight) player1.tryMove(getCurPiece(player1),getX(player1)+1,getY(player1));
-        if(isUp) getCurPiece(player1).rotateLeft();
-        if(isDown) getCurPiece(player1).rotateRight();
+        if(isUp) player1.rotateLeft(getCurPiece(player1));
+        if(isDown) player1.rotateRight(getCurPiece(player1));
         if(isOne) player1.tryMove(getCurPiece(player1),getX(player1),getY(player1)-1);
     }
     Entity getCurPiece(TetrisCanvas player){ return player.getCurPiece(); }

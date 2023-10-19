@@ -139,36 +139,6 @@ public class Entity {
     }
 
     /**
-     * 복사된 entity를 newPiece에 전달, tryMove가 처리. 좌회전
-     */
-    public void rotateLeft() {
-        if (getShape() == Tetrominoes.SquareShape) // 블록이 사각형인 경우 종료
-            return;
-        int[][] result = new int[4][2];
-        for (int i = 0; i < 4; ++i) {
-            result[i][0] = coords[i][1];
-            result[i][1] = -coords[i][0];
-        }
-        setShapeArr(result);
-        return;
-    }
-
-    /**
-     * 복사된 entity를 newPiece에 전달, tryMove가 처리. 우회전
-     */
-    public void rotateRight() {
-        if (getShape() == Tetrominoes.SquareShape) // 블록이 사각형인 경우 종료
-            return;
-        int[][] result = new int[4][2];
-        for (int i = 0; i < 4; ++i) {
-            result[i][0] = -coords[i][1];
-            result[i][1] = coords[i][0];
-        }
-        setShapeArr(result);
-        return;
-    }
-
-    /**
      * 블럭 초기화시점에 랜덤화
      */
     public void setRandomShape() {

@@ -176,6 +176,45 @@ public class TetrisCanvas extends JPanel implements ActionListener {//인터페�
 			//TestMonitor.setScore(-1,false);//isP2제거를 위해 이후 리팩토링
 		}
 	}
+
+	public void rotateLeft(Entity entity) {
+		if (entity.getNumOfRotate() == 1) {
+            return;
+        }
+		int x, y;
+		int[][] result = new int[4][2];
+		for (int i = 0; i < 4; ++i) {
+			result[i][0] = entity.y(i);
+			result[i][1] = -entity.x(i);
+			x = entity.getCurX() + result[i][0];
+			y = entity.getCurY() - result[i][1];
+			if (x < 0 || x >= BoardWidth || y < 0 || y >= BoardHeight)//테트리스 컨트롤 도형의 x,y에 의해 통제
+				return;
+			if (shapeAt(x, y) != Tetrominoes.NoShape)//테트리스 핸들링 도형이 블랭크가 아닐시 게임은 진행중. 불리언에 의해 제어
+				return;
+		}
+		entity.setShapeArr(result);
+	}
+
+	public void rotateRight(Entity entity) {
+		if (entity.getNumOfRotate() == 1) {
+			return;
+		}
+		int x, y;
+		int[][] result = new int[4][2];
+		for (int i = 0; i < 4; ++i) {
+			result[i][0] = -entity.y(i);
+			result[i][1] = entity.x(i);
+			x = entity.getCurX() + result[i][0];
+			y = entity.getCurY() - result[i][1];
+			if (x < 0 || x >= BoardWidth || y < 0 || y >= BoardHeight)//테트리스 컨트롤 도형의 x,y에 의해 통제
+				return;
+			if (shapeAt(x, y) != Tetrominoes.NoShape)//테트리스 핸들링 도형이 블랭크가 아닐시 게임은 진행중. 불리언에 의해 제어
+				return;
+		}
+		entity.setShapeArr(result);
+	}
+
 	/** 블록 움직일 수 있는지 여부 반환<br/>
 	 *  만약 움직일 수 있다면 움직이는 메서드 */
 	public boolean tryMove(Entity newPiece, int newX, int newY) {

@@ -35,7 +35,7 @@ public class TetrisCanvasAI extends TetrisCanvas {
 //		System.out.println("----------------------------");
 
 		for (int i = goodPosition[2]; i > 0; i--) {
-			curPiece.rotateRight();
+			rotateRight(curPiece);
 		}
 		int num = curPiece.getCurX() - goodPosition[0];
 		while (num != 0){
